@@ -1,20 +1,228 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Website Blocker</title>
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="styles.css">
+    <title>Website Blocker Pro</title>
 </head>
 <body>
-  <div class="container">
-    <h2>Website Blocker</h2>
-    <input type="text" id="domainInput" placeholder="e.g. youtube.com">
-    <button id="addBtn">Add</button>
-    <div class="info-message">ℹ️ Blocking works for new tabs or address bar visits. If a site is already open, please close and reopen the tab for blocking to take effect!</div>
-    <ul id="blockedList"></ul>
-    <div id="debug" style="margin-top:16px; font-size:0.9em; color:#888;"></div>
-  </div>
-  <script src="popup.js"></script>
+    <div class="container">
+        <header>
+            <h1>🚫 Website Blocker Pro</h1>
+            <div class="status-indicator" id="statusIndicator">
+                <span class="status-dot"></span>
+                <span class="status-text">Active</span>
+            </div>
+        </header>
+
+        <!-- Main Tabs -->
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="blocking">Blocking</button>
+            <button class="tab-btn" data-tab="unlock">Temporary Unlock</button>
+            <button class="tab-btn" data-tab="whitelist">Whitelist</button>
+            <button class="tab-btn" data-tab="categories">Categories</button>
+            <button class="tab-btn" data-tab="dashboard">Dashboard</button>
+            <button class="tab-btn" data-tab="settings">Settings</button>
+        </div>
+
+        <!-- Blocking Tab -->
+        <div class="tab-content active" id="blocking">
+            <div class="input-group">
+                <input type="text" id="domainInput" placeholder="Enter domain (e.g., facebook.com)">
+                <button id="addBtn" class="btn-primary">Add</button>
+            </div>
+            
+            <div class="category-selector">
+                <select id="categorySelect">
+                    <option value="">Select Category</option>
+                    <option value="social">Social Media</option>
+                    <option value="gaming">Gaming</option>
+                    <option value="shopping">Shopping</option>
+                    <option value="entertainment">Entertainment</option>
+                    <option value="news">News</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+
+            <div class="blocked-sites">
+                <h3>Blocked Sites</h3>
+                <div class="filter-controls">
+                    <select id="categoryFilter">
+                        <option value="">All Categories</option>
+                        <option value="social">Social Media</option>
+                        <option value="gaming">Gaming</option>
+                        <option value="shopping">Shopping</option>
+                        <option value="entertainment">Entertainment</option>
+                        <option value="news">News</option>
+                        <option value="other">Other</option>
+                    </select>
+                    <input type="text" id="searchInput" placeholder="Search sites...">
+                </div>
+                <ul id="blockedList"></ul>
+            </div>
+        </div>
+
+        <!-- Temporary Unlock Tab -->
+        <div class="tab-content" id="unlock">
+            <div class="unlock-container">
+                <div class="unlock-header">
+                    <h3>🔓 Temporary Unlock</h3>
+                    <p class="unlock-description">Temporarily unblock sites for a specific duration</p>
+                </div>
+                
+                <div class="unlock-form">
+                    <div class="unlock-row">
+                        <div class="unlock-field">
+                            <label>Select Site</label>
+                            <select id="unlockSiteSelect" class="unlock-select">
+                                <option value="">Choose a blocked site...</option>
+                            </select>
+                        </div>
+                        <div class="unlock-field">
+                            <label>Duration</label>
+                            <select id="unlockDuration" class="unlock-select">
+                                <option value="15">15 minutes</option>
+                                <option value="30">30 minutes</option>
+                                <option value="60" selected>1 hour</option>
+                                <option value="120">2 hours</option>
+                                <option value="240">4 hours</option>
+                                <option value="480">8 hours</option>
+                                <option value="1440">24 hours</option>
+                                <option value="custom">Custom</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="unlock-row" id="customDurationRow" style="display: none;">
+                        <div class="unlock-field">
+                            <label>Custom Duration (minutes)</label>
+                            <input type="number" id="customDurationInput" min="1" max="10080" placeholder="Enter minutes (max 7 days)">
+                        </div>
+                    </div>
+                    
+                    <div class="unlock-actions">
+                        <button id="unlockSiteBtn" class="btn-primary">Unlock Site</button>
+                    </div>
+                </div>
+                
+                <div class="active-unlocks">
+                    <h4>🕐 Active Unlocks</h4>
+                    <div id="activeUnlocksList" class="unlocks-list">
+                        <!-- Active unlocks will be populated here -->
+                    </div>
+                </div>
+                
+                <div class="unlock-history">
+                    <h4>📋 Recent Unlocks</h4>
+                    <div id="unlockHistoryList" class="history-list">
+                        <!-- Unlock history will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Whitelist Tab -->
+        <div class="tab-content" id="whitelist">
+            <div class="whitelist-controls">
+                <h3>Whitelist Sites</h3>
+                <div class="input-group">
+                    <input type="text" id="whitelistInput" placeholder="Enter domain to whitelist">
+                    <button id="addWhitelistBtn" class="btn-primary">Add</button>
+                </div>
+                <ul id="whitelistList"></ul>
+            </div>
+        </div>
+
+        <!-- Categories Tab -->
+        <div class="tab-content" id="categories">
+            <div class="categories-controls">
+                <h3>Manage Categories</h3>
+                <div class="input-group">
+                    <input type="text" id="newCategoryInput" placeholder="New category name">
+                    <button id="addCategoryBtn" class="btn-primary">Add Category</button>
+                </div>
+                <div class="category-list" id="categoryList"></div>
+            </div>
+        </div>
+
+        <!-- Dashboard Tab -->
+        <div class="tab-content" id="dashboard">
+            <div class="dashboard-stats">
+                <div class="stat-card">
+                    <h4>Today's Blocks</h4>
+                    <div class="stat-number" id="todayBlocks">0</div>
+                </div>
+                <div class="stat-card">
+                    <h4>Time Saved</h4>
+                    <div class="stat-number" id="timeSaved">0 min</div>
+                </div>
+                <div class="stat-card">
+                    <h4>Focus Score</h4>
+                    <div class="stat-number" id="focusScore">0%</div>
+                </div>
+            </div>
+            
+            <div class="focus-timer">
+                <h3>Focus Timer</h3>
+                <div class="timer-display" id="timerDisplay">25:00</div>
+                <div class="timer-controls">
+                    <button id="startTimer" class="btn-primary">Start</button>
+                    <button id="pauseTimer" class="btn-secondary">Pause</button>
+                    <button id="resetTimer" class="btn-secondary">Reset</button>
+                </div>
+            </div>
+            
+            <div class="recent-activity">
+                <h3>Recent Activity</h3>
+                <div id="recentActivity"></div>
+            </div>
+        </div>
+
+        <!-- Settings Tab -->
+        <div class="tab-content" id="settings">
+            <div class="settings-section">
+                <h3>General Settings</h3>
+                <div class="setting-item">
+                    <label>
+                        <input type="checkbox" id="notificationsEnabled">
+                        Enable Notifications
+                    </label>
+                </div>
+                <div class="setting-item">
+                    <label>
+                        <input type="checkbox" id="passwordProtection">
+                        Password Protection
+                    </label>
+                </div>
+                <div class="setting-item" id="passwordSection" style="display: none;">
+                    <input type="password" id="extensionPassword" placeholder="Set extension password">
+                </div>
+            </div>
+            
+            <div class="settings-section">
+                <h3>Import/Export</h3>
+                <button id="exportData" class="btn-secondary">Export Data</button>
+                <button id="importData" class="btn-secondary">Import Data</button>
+                <input type="file" id="importFile" accept=".json" style="display: none;">
+            </div>
+            
+            <div class="settings-section">
+                <h3>Keyboard Shortcuts</h3>
+                <div class="shortcut-item">
+                    <span>Toggle Extension:</span>
+                    <kbd>Ctrl+Shift+B</kbd>
+                </div>
+                <div class="shortcut-item">
+                    <span>Quick Add Site:</span>
+                    <kbd>Ctrl+Shift+A</kbd>
+                </div>
+            </div>
+        </div>
+
+        <div id="debug" class="debug-info">
+            <button id="testDNR" class="btn-secondary" style="margin: 10px;">Test DNR Rules</button>
+        </div>
+    </div>
+    <script src="popup.js"></script>
 </body>
-</html> 
+</html>
