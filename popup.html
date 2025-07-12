@@ -2,123 +2,681 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css?v=1.0.3">
     <title>Website Blocker Pro</title>
+    <style>
+        /* Debug styles to ensure visibility */
+        body {
+            width: 500px !important;
+            height: 650px !important;
+            background: #f5f7fa !important;
+            color: #2d3748 !important;
+        }
+        .container {
+            width: 100% !important;
+            height: 100% !important;
+            background: white !important;
+            display: flex !important;
+            flex-direction: column !important;
+        }
+        .premium-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            padding: 20px 24px !important;
+            flex-shrink: 0 !important;
+        }
+        .premium-tabs {
+            background: white !important;
+            padding: 10px !important;
+            flex-shrink: 0 !important;
+        }
+        .tab-content {
+            background: white !important;
+            padding: 20px !important;
+            flex: 1 !important;
+            overflow-y: auto !important;
+        }
+        .tab-content.active {
+            display: block !important;
+        }
+        .content-header {
+            background: #f8fafc !important;
+            padding: 20px 24px 16px !important;
+            margin-bottom: 0 !important;
+        }
+        .blocking-content,
+        .unlock-content,
+        .whitelist-content,
+        .categories-content,
+        .dashboard-content,
+        .settings-content {
+            padding: 20px 24px !important;
+        }
+
+        /* Premium Site Items - Complete Override */
+        .sites-list {
+            max-height: 300px !important;
+            overflow-y: auto !important;
+            border: none !important;
+            border-radius: 0 !important;
+            background: transparent !important;
+            box-shadow: none !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+        .site-item {
+            background: #ffffff !important;
+            border: 2px solid #000000 !important;
+            border-radius: 8px !important;
+            margin-bottom: 8px !important;
+            padding: 12px 16px !important;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+            position: relative !important;
+            overflow: hidden !important;
+            min-height: 60px !important;
+            border-left: 4px solid #000000 !important;
+        }
+        .site-item:not(:last-child) {
+            border-bottom: 2px solid #000000 !important;
+        }
+        .site-item::before {
+            content: '' !important;
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            height: 3px !important;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 50%, #667eea 100%) !important;
+            opacity: 0 !important;
+            transition: opacity 0.3s ease !important;
+        }
+        .site-item:hover {
+            transform: translateY(-2px) !important;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.12) !important;
+            border-color: rgba(102, 126, 234, 0.3) !important;
+        }
+        .site-item:hover::before {
+            opacity: 1 !important;
+        }
+        .site-item:last-child {
+            margin-bottom: 0 !important;
+        }
+        .site-info {
+            display: flex !important;
+            align-items: center !important;
+            gap: 16px !important;
+            flex: 1 !important;
+            min-width: 0 !important;
+        }
+        .site-icon {
+            width: 44px !important;
+            height: 44px !important;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            border-radius: 12px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            font-size: 18px !important;
+            color: white !important;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2) !important;
+            flex-shrink: 0 !important;
+            position: relative !important;
+            overflow: hidden !important;
+        }
+        .site-icon::after {
+            content: '' !important;
+            position: absolute !important;
+            top: 0 !important;
+            left: -100% !important;
+            width: 100% !important;
+            height: 100% !important;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent) !important;
+            transition: left 0.6s ease !important;
+        }
+        .site-item:hover .site-icon::after {
+            left: 100% !important;
+        }
+        .site-details {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 6px !important;
+            flex: 1 !important;
+            min-width: 0 !important;
+            justify-content: center !important;
+        }
+        .site-name {
+            font-size: 16px !important;
+            font-weight: 700 !important;
+            color: #000000 !important;
+            letter-spacing: -0.3px !important;
+            line-height: 1.4 !important;
+            margin: 0 !important;
+            text-shadow: none !important;
+            display: block !important;
+        }
+        .site-category {
+            font-size: 12px !important;
+            color: #666666 !important;
+            background: #f0f0f0 !important;
+            padding: 4px 8px !important;
+            border-radius: 4px !important;
+            font-weight: 600 !important;
+            display: inline-block !important;
+            width: fit-content !important;
+            letter-spacing: 0.2px !important;
+            border: 1px solid #cccccc !important;
+            box-shadow: none !important;
+        }
+        .remove-btn {
+            background: #ff0000 !important;
+            color: #ffffff !important;
+            border: 2px solid #000000 !important;
+            padding: 0 !important;
+            border-radius: 6px !important;
+            font-size: 20px !important;
+            cursor: pointer !important;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            font-weight: 700 !important;
+            width: 32px !important;
+            height: 32px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            flex-shrink: 0 !important;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+            position: relative !important;
+            overflow: hidden !important;
+        }
+        .remove-btn::before {
+            content: '' !important;
+            position: absolute !important;
+            top: 50% !important;
+            left: 50% !important;
+            width: 0 !important;
+            height: 0 !important;
+            background: rgba(245, 101, 101, 0.2) !important;
+            border-radius: 50% !important;
+            transform: translate(-50%, -50%) !important;
+            transition: all 0.3s ease !important;
+        }
+        .remove-btn:hover {
+            background: linear-gradient(135deg, rgba(245, 101, 101, 0.15) 0%, rgba(229, 62, 62, 0.15) 100%) !important;
+            transform: scale(1.1) !important;
+            box-shadow: 0 8px 20px rgba(245, 101, 101, 0.2) !important;
+            border-color: rgba(245, 101, 101, 0.3) !important;
+        }
+        .remove-btn:hover::before {
+            width: 100% !important;
+            height: 100% !important;
+        }
+        .remove-icon {
+            font-size: 18px !important;
+            line-height: 1 !important;
+            font-weight: 700 !important;
+            color: #ffffff !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            position: relative !important;
+            z-index: 2 !important;
+            text-shadow: none !important;
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+
+
+        /* Premium Unlock Items - Complete Override */
+        .unlocks-list, .history-list {
+            max-height: 200px !important;
+            overflow-y: auto !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+        .unlock-item {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%) !important;
+            border: 2px solid rgba(226, 232, 240, 0.8) !important;
+            border-radius: 18px !important;
+            margin-bottom: 14px !important;
+            padding: 18px 22px !important;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06) !important;
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+            position: relative !important;
+            overflow: hidden !important;
+        }
+        .unlock-item::before {
+            content: '' !important;
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            height: 3px !important;
+            background: linear-gradient(90deg, #48bb78 0%, #38a169 50%, #48bb78 100%) !important;
+            opacity: 0 !important;
+            transition: opacity 0.3s ease !important;
+        }
+        .unlock-item:hover {
+            transform: translateY(-3px) scale(1.02) !important;
+            box-shadow: 0 15px 35px rgba(72, 187, 120, 0.12) !important;
+            border-color: rgba(72, 187, 120, 0.4) !important;
+        }
+        .unlock-item:hover::before {
+            opacity: 1 !important;
+        }
+        .unlock-item:last-child {
+            margin-bottom: 0 !important;
+        }
+        .unlock-site-info {
+            display: flex !important;
+            align-items: center !important;
+            gap: 16px !important;
+            flex: 1 !important;
+            min-width: 0 !important;
+        }
+        .unlock-site-icon {
+            width: 46px !important;
+            height: 46px !important;
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%) !important;
+            border-radius: 14px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            font-size: 18px !important;
+            color: white !important;
+            box-shadow: 0 6px 20px rgba(72, 187, 120, 0.25) !important;
+            flex-shrink: 0 !important;
+            position: relative !important;
+            overflow: hidden !important;
+        }
+        .unlock-site-icon::after {
+            content: '' !important;
+            position: absolute !important;
+            top: 0 !important;
+            left: -100% !important;
+            width: 100% !important;
+            height: 100% !important;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent) !important;
+            transition: left 0.6s ease !important;
+        }
+        .unlock-item:hover .unlock-site-icon::after {
+            left: 100% !important;
+        }
+        .unlock-details {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 6px !important;
+            flex: 1 !important;
+            min-width: 0 !important;
+        }
+        .unlock-site {
+            font-size: 15px !important;
+            font-weight: 800 !important;
+            color: #1a202c !important;
+            letter-spacing: -0.3px !important;
+            line-height: 1.3 !important;
+            margin: 0 !important;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+        }
+        .unlock-time {
+            font-size: 13px !important;
+            color: #4a5568 !important;
+            font-weight: 600 !important;
+            background: linear-gradient(135deg, rgba(72, 187, 120, 0.1) 0%, rgba(56, 161, 105, 0.1) 100%) !important;
+            padding: 6px 12px !important;
+            border-radius: 10px !important;
+            display: inline-block !important;
+            width: fit-content !important;
+            border: 1px solid rgba(72, 187, 120, 0.2) !important;
+        }
+        .remove-unlock {
+            background: linear-gradient(135deg, rgba(245, 101, 101, 0.1) 0%, rgba(229, 62, 62, 0.1) 100%) !important;
+            color: #e53e3e !important;
+            border: 2px solid rgba(245, 101, 101, 0.25) !important;
+            padding: 0 !important;
+            border-radius: 14px !important;
+            font-size: 18px !important;
+            cursor: pointer !important;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            font-weight: 800 !important;
+            width: 42px !important;
+            height: 42px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            flex-shrink: 0 !important;
+            box-shadow: 0 4px 15px rgba(245, 101, 101, 0.15) !important;
+            position: relative !important;
+            overflow: hidden !important;
+        }
+        .remove-unlock::before {
+            content: '' !important;
+            position: absolute !important;
+            top: 50% !important;
+            left: 50% !important;
+            width: 0 !important;
+            height: 0 !important;
+            background: rgba(245, 101, 101, 0.2) !important;
+            border-radius: 50% !important;
+            transform: translate(-50%, -50%) !important;
+            transition: all 0.3s ease !important;
+        }
+        .remove-unlock:hover {
+            background: linear-gradient(135deg, rgba(245, 101, 101, 0.2) 0%, rgba(229, 62, 62, 0.2) 100%) !important;
+            transform: scale(1.12) rotate(5deg) !important;
+            box-shadow: 0 10px 25px rgba(245, 101, 101, 0.3) !important;
+            border-color: rgba(245, 101, 101, 0.4) !important;
+        }
+        .remove-unlock:hover::before {
+            width: 100% !important;
+            height: 100% !important;
+        }
+        .history-item .unlock-site-icon {
+            background: linear-gradient(135deg, #a0aec0 0%, #718096 100%) !important;
+            box-shadow: 0 6px 20px rgba(160, 174, 192, 0.25) !important;
+        }
+        .history-item .unlock-time {
+            color: #a0aec0 !important;
+            background: linear-gradient(135deg, rgba(160, 174, 192, 0.1) 0%, rgba(113, 128, 150, 0.1) 100%) !important;
+            border: 1px solid rgba(160, 174, 192, 0.2) !important;
+        }
+
+        /* Section Headers Enhancement */
+        .section-header h3 {
+            font-size: 18px !important;
+            font-weight: 700 !important;
+            color: #2d3748 !important;
+            letter-spacing: -0.4px !important;
+            margin-bottom: 16px !important;
+        }
+
+        /* Unlock Sections Enhancement */
+        .unlock-section {
+            background: rgba(255, 255, 255, 0.95) !important;
+            border: 2px solid rgba(226, 232, 240, 0.8) !important;
+            border-radius: 18px !important;
+            padding: 20px !important;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08) !important;
+        }
+        .unlock-section h4 {
+            font-size: 16px !important;
+            font-weight: 700 !important;
+            color: #2d3748 !important;
+            margin-bottom: 16px !important;
+            letter-spacing: -0.3px !important;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>🚫 Website Blocker Pro</h1>
-            <div class="status-indicator" id="statusIndicator">
-                <span class="status-dot"></span>
-                <span class="status-text">Active</span>
+        <!-- Premium Header -->
+        <header class="premium-header">
+            <div class="header-content">
+                <div class="logo-section">
+                    <div class="logo-icon">🚫</div>
+                    <div class="logo-text">
+                        <h1>Website Blocker Pro</h1>
+                        <p class="subtitle">Focus • Productivity • Success</p>
+                    </div>
+                </div>
+                <div class="status-indicator" id="statusIndicator">
+                    <div class="status-dot"></div>
+                    <span class="status-text">Active</span>
+                </div>
             </div>
         </header>
 
-        <!-- Main Tabs -->
-        <div class="tabs">
-            <button class="tab-btn active" data-tab="blocking">Blocking</button>
-            <button class="tab-btn" data-tab="unlock">Temporary Unlock</button>
-            <button class="tab-btn" data-tab="whitelist">Whitelist</button>
-            <button class="tab-btn" data-tab="categories">Categories</button>
-            <button class="tab-btn" data-tab="dashboard">Dashboard</button>
-            <button class="tab-btn" data-tab="settings">Settings</button>
-        </div>
+        <!-- Premium Navigation Tabs -->
+        <nav class="premium-tabs">
+            <button class="tab-btn active" data-tab="blocking">
+                <span class="tab-icon">🛡️</span>
+                <span class="tab-text">Blocking</span>
+            </button>
+            <button class="tab-btn" data-tab="unlock">
+                <span class="tab-icon">🔓</span>
+                <span class="tab-text">Unlock</span>
+            </button>
+            <button class="tab-btn" data-tab="whitelist">
+                <span class="tab-icon">✅</span>
+                <span class="tab-text">Whitelist</span>
+            </button>
+            <button class="tab-btn" data-tab="categories">
+                <span class="tab-icon">📁</span>
+                <span class="tab-text">Categories</span>
+            </button>
+            <button class="tab-btn" data-tab="dashboard">
+                <span class="tab-icon">📊</span>
+                <span class="tab-text">Dashboard</span>
+            </button>
+            <button class="tab-btn" data-tab="settings">
+                <span class="tab-icon">⚙️</span>
+                <span class="tab-text">Settings</span>
+            </button>
+        </nav>
 
         <!-- Blocking Tab -->
         <div class="tab-content active" id="blocking">
-            <div class="input-group">
-                <input type="text" id="domainInput" placeholder="Enter domain (e.g., facebook.com)">
-                <button id="addBtn" class="btn-primary">Add</button>
+            <div class="content-header">
+                <h2>🛡️ Site Blocking</h2>
+                <p>Add websites to your block list to stay focused and productive</p>
             </div>
             
-            <div class="category-selector">
-                <select id="categorySelect">
-                    <option value="">Select Category</option>
-                    <option value="social">Social Media</option>
-                    <option value="gaming">Gaming</option>
-                    <option value="shopping">Shopping</option>
-                    <option value="entertainment">Entertainment</option>
-                    <option value="news">News</option>
-                    <option value="other">Other</option>
-                </select>
-            </div>
-
-            <div class="blocked-sites">
-                <h3>Blocked Sites</h3>
-                <div class="filter-controls">
-                    <select id="categoryFilter">
-                        <option value="">All Categories</option>
-                        <option value="social">Social Media</option>
-                        <option value="gaming">Gaming</option>
-                        <option value="shopping">Shopping</option>
-                        <option value="entertainment">Entertainment</option>
-                        <option value="news">News</option>
-                        <option value="other">Other</option>
-                    </select>
-                    <input type="text" id="searchInput" placeholder="Search sites...">
+            <div class="blocking-content">
+                <div class="premium-input-section">
+                    <div class="input-group">
+                        <div class="input-wrapper">
+                            <input type="text" id="domainInput" placeholder="Enter domain (e.g., facebook.com)">
+                            <button id="addBtn" class="btn-primary">
+                                <span class="btn-icon">+</span>
+                                <span class="btn-text">Add</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="category-selector">
+                        <select id="categorySelect" class="premium-select">
+                            <option value="">📂 Select Category</option>
+                            <option value="social">📱 Social Media</option>
+                            <option value="gaming">🎮 Gaming</option>
+                            <option value="shopping">🛒 Shopping</option>
+                            <option value="entertainment">🎬 Entertainment</option>
+                            <option value="news">📰 News</option>
+                            <option value="other">📌 Other</option>
+                        </select>
+                    </div>
                 </div>
-                <ul id="blockedList"></ul>
+
+                <div class="blocked-sites-section">
+                    <div class="section-header">
+                        <h3>🚫 Blocked Sites</h3>
+                        <div class="filter-controls">
+                            <select id="categoryFilter" class="premium-select">
+                                <option value="">📂 All Categories</option>
+                                <option value="social">📱 Social Media</option>
+                                <option value="gaming">🎮 Gaming</option>
+                                <option value="shopping">🛒 Shopping</option>
+                                <option value="entertainment">🎬 Entertainment</option>
+                                <option value="news">📰 News</option>
+                                <option value="other">📌 Other</option>
+                            </select>
+                            <div class="search-wrapper">
+                                <input type="text" id="searchInput" placeholder="🔍 Search sites...">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sites-list" id="blockedList">
+                        <div class="site-item">
+                            <div class="site-info">
+                                <div class="site-icon">🌐</div>
+                                <div class="site-details">
+                                    <span class="site-name">facebook.com</span>
+                                    <span class="site-category">Social Media</span>
+                                </div>
+                            </div>
+                            <button class="remove-btn">
+                                <span class="remove-icon">×</span>
+                            </button>
+                        </div>
+                        <div class="site-item">
+                            <div class="site-info">
+                                <div class="site-icon">🎬</div>
+                                <div class="site-details">
+                                    <span class="site-name">youtube.com</span>
+                                    <span class="site-category">Entertainment</span>
+                                </div>
+                            </div>
+                            <button class="remove-btn">
+                                <span class="remove-icon">×</span>
+                            </button>
+                        </div>
+                        <div class="site-item">
+                            <div class="site-info">
+                                <div class="site-icon">📱</div>
+                                <div class="site-details">
+                                    <span class="site-name">instagram.com</span>
+                                    <span class="site-category">Social Media</span>
+                                </div>
+                            </div>
+                            <button class="remove-btn">
+                                <span class="remove-icon">×</span>
+                            </button>
+                        </div>
+                        <div class="site-item">
+                            <div class="site-info">
+                                <div class="site-icon">🎮</div>
+                                <div class="site-details">
+                                    <span class="site-name">reddit.com</span>
+                                    <span class="site-category">Entertainment</span>
+                                </div>
+                            </div>
+                            <button class="remove-btn">
+                                <span class="remove-icon">×</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
         <!-- Temporary Unlock Tab -->
         <div class="tab-content" id="unlock">
-            <div class="unlock-container">
-                <div class="unlock-header">
-                    <h3>🔓 Temporary Unlock</h3>
-                    <p class="unlock-description">Temporarily unblock sites for a specific duration</p>
-                </div>
-                
-                <div class="unlock-form">
-                    <div class="unlock-row">
-                        <div class="unlock-field">
-                            <label>Select Site</label>
-                            <select id="unlockSiteSelect" class="unlock-select">
-                                <option value="">Choose a blocked site...</option>
-                            </select>
+            <div class="content-header">
+                <h2>🔓 Temporary Unlock</h2>
+                <p>Grant temporary access to blocked sites for specific durations</p>
+            </div>
+            
+            <div class="unlock-content">
+                <div class="unlock-container">
+                    <div class="unlock-form">
+                        <div class="form-row">
+                            <div class="form-field">
+                                <label>🌐 Select Site</label>
+                                <select id="unlockSiteSelect" class="premium-select">
+                                    <option value="">Choose a blocked site...</option>
+                                    <option value="facebook.com">facebook.com</option>
+                                    <option value="youtube.com">youtube.com</option>
+                                </select>
+                            </div>
+                            <div class="form-field">
+                                <label>⏰ Duration</label>
+                                <select id="unlockDuration" class="premium-select">
+                                    <option value="1">⚡ 1 minute</option>
+                                    <option value="5">⚡ 5 minutes</option>
+                                    <option value="10">⚡ 10 minutes</option>
+                                    <option value="15">⚡ 15 minutes</option>
+                                    <option value="30">⚡ 30 minutes</option>
+                                    <option value="60" selected>⏰ 1 hour</option>
+                                    <option value="120">⏰ 2 hours</option>
+                                    <option value="240">⏰ 4 hours</option>
+                                    <option value="480">⏰ 8 hours</option>
+                                    <option value="1440">⏰ 24 hours</option>
+                                    <option value="custom">⚙️ Custom</option>
+                                </select>
+                            </div>
                         </div>
-                        <div class="unlock-field">
-                            <label>Duration</label>
-                            <select id="unlockDuration" class="unlock-select">
-                                <option value="1">1 minute</option>
-                                <option value="5">5 minutes</option>
-                                <option value="10">10 minutes</option>
-                                <option value="15">15 minutes</option>
-                                <option value="30">30 minutes</option>
-                                <option value="60" selected>1 hour</option>
-                                <option value="120">2 hours</option>
-                                <option value="240">4 hours</option>
-                                <option value="480">8 hours</option>
-                                <option value="1440">24 hours</option>
-                                <option value="custom">Custom</option>
-                            </select>
+                        
+                        <div class="form-row" id="customDurationRow" style="display: none;">
+                            <div class="form-field">
+                                <label>⚙️ Custom Duration (minutes)</label>
+                                <input type="number" id="customDurationInput" min="1" max="10080" placeholder="Enter minutes (max 7 days)" class="premium-input">
+                            </div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button id="unlockSiteBtn" class="btn-primary">
+                                <span class="btn-icon">🔓</span>
+                                <span class="btn-text">Unlock Site</span>
+                            </button>
                         </div>
                     </div>
                     
-                    <div class="unlock-row" id="customDurationRow" style="display: none;">
-                        <div class="unlock-field">
-                            <label>Custom Duration (minutes)</label>
-                            <input type="number" id="customDurationInput" min="1" max="10080" placeholder="Enter minutes (max 7 days)">
+                    <div class="unlock-sections">
+                        <div class="unlock-section">
+                            <h4>🕐 Active Unlocks</h4>
+                            <div id="activeUnlocksList" class="unlocks-list">
+                                <div class="unlock-item">
+                                    <div class="unlock-info">
+                                        <div class="unlock-site-info">
+                                            <div class="unlock-site-icon">🌐</div>
+                                            <div class="unlock-details">
+                                                <div class="unlock-site">facebook.com</div>
+                                                <div class="unlock-time">Expires in 45 min</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button class="remove-unlock">
+                                        <span class="remove-icon">×</span>
+                                    </button>
+                                </div>
+                                <div class="unlock-item">
+                                    <div class="unlock-info">
+                                        <div class="unlock-site-info">
+                                            <div class="unlock-site-icon">🎬</div>
+                                            <div class="unlock-details">
+                                                <div class="unlock-site">youtube.com</div>
+                                                <div class="unlock-time">Expires in 2 hours</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button class="remove-unlock">
+                                        <span class="remove-icon">×</span>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    
-                    <div class="unlock-actions">
-                        <button id="unlockSiteBtn" class="btn-primary">Unlock Site</button>
-                    </div>
-                </div>
-                
-                <div class="active-unlocks">
-                    <h4>🕐 Active Unlocks</h4>
-                    <div id="activeUnlocksList" class="unlocks-list">
-                        <!-- Active unlocks will be populated here -->
-                    </div>
-                </div>
-                
-                <div class="unlock-history">
-                    <h4>📋 Recent Unlocks</h4>
-                    <div id="unlockHistoryList" class="history-list">
-                        <!-- Unlock history will be populated here -->
+                        
+                        <div class="unlock-section">
+                            <h4>📋 Recent Unlocks</h4>
+                            <div id="unlockHistoryList" class="history-list">
+                                <div class="unlock-item history-item">
+                                    <div class="unlock-info">
+                                        <div class="unlock-site-info">
+                                            <div class="unlock-site-icon">🎮</div>
+                                            <div class="unlock-details">
+                                                <div class="unlock-site">reddit.com</div>
+                                                <div class="unlock-time">Expired 2 hours ago</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="unlock-item history-item">
+                                    <div class="unlock-info">
+                                        <div class="unlock-site-info">
+                                            <div class="unlock-site-icon">📱</div>
+                                            <div class="unlock-details">
+                                                <div class="unlock-site">instagram.com</div>
+                                                <div class="unlock-time">Expired 1 day ago</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -126,104 +684,213 @@
 
         <!-- Whitelist Tab -->
         <div class="tab-content" id="whitelist">
-            <div class="whitelist-controls">
-                <h3>Whitelist Sites</h3>
-                <div class="input-group">
-                    <input type="text" id="whitelistInput" placeholder="Enter domain to whitelist">
-                    <button id="addWhitelistBtn" class="btn-primary">Add</button>
+            <div class="content-header">
+                <h2>✅ Whitelist Management</h2>
+                <p>Add trusted sites that should never be blocked</p>
+            </div>
+            
+            <div class="whitelist-content">
+                <div class="whitelist-controls">
+                    <div class="input-group">
+                        <div class="input-wrapper">
+                            <input type="text" id="whitelistInput" placeholder="Enter domain to whitelist">
+                            <button id="addWhitelistBtn" class="btn-primary">
+                                <span class="btn-icon">+</span>
+                                <span class="btn-text">Add</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="sites-list" id="whitelistList">
+                        <div class="site-item">
+                            <div class="site-info">
+                                <div class="site-icon">💻</div>
+                                <div class="site-details">
+                                    <span class="site-name">github.com</span>
+                                    <span class="site-category">Development</span>
+                                </div>
+                            </div>
+                            <button class="remove-btn">
+                                <span class="remove-icon">×</span>
+                            </button>
+                        </div>
+                        <div class="site-item">
+                            <div class="site-info">
+                                <div class="site-icon">📚</div>
+                                <div class="site-details">
+                                    <span class="site-name">stackoverflow.com</span>
+                                    <span class="site-category">Development</span>
+                                </div>
+                            </div>
+                            <button class="remove-btn">
+                                <span class="remove-icon">×</span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
-                <ul id="whitelistList"></ul>
             </div>
         </div>
 
         <!-- Categories Tab -->
         <div class="tab-content" id="categories">
-            <div class="categories-controls">
-                <h3>Manage Categories</h3>
-                <div class="input-group">
-                    <input type="text" id="newCategoryInput" placeholder="New category name">
-                    <button id="addCategoryBtn" class="btn-primary">Add Category</button>
+            <div class="content-header">
+                <h2>📁 Category Management</h2>
+                <p>Organize your blocked sites into custom categories</p>
+            </div>
+            
+            <div class="categories-content">
+                <div class="categories-controls">
+                    <div class="input-group">
+                        <div class="input-wrapper">
+                            <input type="text" id="newCategoryInput" placeholder="New category name">
+                            <button id="addCategoryBtn" class="btn-primary">
+                                <span class="btn-icon">+</span>
+                                <span class="btn-text">Add Category</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="category-list" id="categoryList">
+                        <div class="category-item">
+                            <span class="category-name">Social Media</span>
+                            <span class="category-count">3 sites</span>
+                        </div>
+                        <div class="category-item">
+                            <span class="category-name">Entertainment</span>
+                            <span class="category-count">2 sites</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="category-list" id="categoryList"></div>
             </div>
         </div>
 
         <!-- Dashboard Tab -->
         <div class="tab-content" id="dashboard">
-            <div class="dashboard-stats">
-                <div class="stat-card">
-                    <h4>Today's Blocks</h4>
-                    <div class="stat-number" id="todayBlocks">0</div>
-                </div>
-                <div class="stat-card">
-                    <h4>Time Saved</h4>
-                    <div class="stat-number" id="timeSaved">0 min</div>
-                </div>
-                <div class="stat-card">
-                    <h4>Focus Score</h4>
-                    <div class="stat-number" id="focusScore">0%</div>
-                </div>
+            <div class="content-header">
+                <h2>📊 Productivity Dashboard</h2>
+                <p>Track your focus progress and productivity metrics</p>
             </div>
             
-            <div class="focus-timer">
-                <h3>Focus Timer</h3>
-                <div class="timer-display" id="timerDisplay">25:00</div>
-                <div class="timer-controls">
-                    <button id="startTimer" class="btn-primary">Start</button>
-                    <button id="pauseTimer" class="btn-secondary">Pause</button>
-                    <button id="resetTimer" class="btn-secondary">Reset</button>
+            <div class="dashboard-content">
+                <div class="dashboard-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon">🛡️</div>
+                        <div class="stat-content">
+                            <h4>Today's Blocks</h4>
+                            <div class="stat-number" id="todayBlocks">12</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">⏰</div>
+                        <div class="stat-content">
+                            <h4>Time Saved</h4>
+                            <div class="stat-number" id="timeSaved">45 min</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🎯</div>
+                        <div class="stat-content">
+                            <h4>Focus Score</h4>
+                            <div class="stat-number" id="focusScore">85%</div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            
-            <div class="recent-activity">
-                <h3>Recent Activity</h3>
-                <div id="recentActivity"></div>
+                
+                <div class="focus-timer">
+                    <h3>⏱️ Focus Timer</h3>
+                    <div class="timer-display" id="timerDisplay">25:00</div>
+                    <div class="timer-controls">
+                        <button id="startTimer" class="btn-primary">
+                            <span class="btn-icon">▶️</span>
+                            <span class="btn-text">Start</span>
+                        </button>
+                        <button id="pauseTimer" class="btn-secondary">
+                            <span class="btn-icon">⏸️</span>
+                            <span class="btn-text">Pause</span>
+                        </button>
+                        <button id="resetTimer" class="btn-secondary">
+                            <span class="btn-icon">🔄</span>
+                            <span class="btn-text">Reset</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="recent-activity">
+                    <h3>📝 Recent Activity</h3>
+                    <div id="recentActivity">
+                        <div class="activity-item">
+                            <span class="activity-text">Blocked facebook.com</span>
+                            <span class="activity-time">2 min ago</span>
+                        </div>
+                        <div class="activity-item">
+                            <span class="activity-text">Unlocked youtube.com for 1 hour</span>
+                            <span class="activity-time">15 min ago</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
         <!-- Settings Tab -->
         <div class="tab-content" id="settings">
-            <div class="settings-section">
-                <h3>General Settings</h3>
-                <div class="setting-item">
-                    <label>
-                        <input type="checkbox" id="notificationsEnabled">
-                        Enable Notifications
-                    </label>
-                </div>
-                <div class="setting-item">
-                    <label>
-                        <input type="checkbox" id="passwordProtection">
-                        Password Protection
-                    </label>
-                </div>
-                <div class="setting-item" id="passwordSection" style="display: none;">
-                    <input type="password" id="extensionPassword" placeholder="Set extension password">
-                </div>
+            <div class="content-header">
+                <h2>⚙️ Settings & Preferences</h2>
+                <p>Customize your extension experience</p>
             </div>
             
-            <div class="settings-section">
-                <h3>Import/Export</h3>
-                <button id="exportData" class="btn-secondary">Export Data</button>
-                <button id="importData" class="btn-secondary">Import Data</button>
-                <input type="file" id="importFile" accept=".json" style="display: none;">
-            </div>
-            
-            <div class="settings-section">
-                <h3>Keyboard Shortcuts</h3>
-                <div class="shortcut-item">
-                    <span>Toggle Extension:</span>
-                    <kbd>Ctrl+Shift+B</kbd>
-                </div>
-                <div class="shortcut-item">
-                    <span>Quick Add Site:</span>
-                    <kbd>Ctrl+Shift+A</kbd>
+            <div class="settings-content">
+                <div class="settings-sections">
+                    <div class="settings-section">
+                        <h3>🔔 General Settings</h3>
+                        <div class="setting-item">
+                            <label class="toggle-label">
+                                <input type="checkbox" id="notificationsEnabled" checked>
+                                <span class="toggle-slider"></span>
+                                <span class="toggle-text">Enable Notifications</span>
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <label class="toggle-label">
+                                <input type="checkbox" id="passwordProtection">
+                                <span class="toggle-slider"></span>
+                                <span class="toggle-text">Password Protection</span>
+                            </label>
+                        </div>
+                        <div class="setting-item" id="passwordSection" style="display: none;">
+                            <input type="password" id="extensionPassword" placeholder="Set extension password" class="premium-input">
+                        </div>
+                    </div>
+                    
+                    <div class="settings-section">
+                        <h3>�� Import/Export</h3>
+                        <div class="settings-actions">
+                            <button id="exportData" class="btn-secondary">
+                                <span class="btn-icon">📤</span>
+                                <span class="btn-text">Export Data</span>
+                            </button>
+                            <button id="importData" class="btn-secondary">
+                                <span class="btn-icon">📥</span>
+                                <span class="btn-text">Import Data</span>
+                            </button>
+                        </div>
+                        <input type="file" id="importFile" accept=".json" style="display: none;">
+                    </div>
+                    
+                    <div class="settings-section">
+                        <h3>⌨️ Keyboard Shortcuts</h3>
+                        <div class="shortcut-item">
+                            <span>Toggle Extension:</span>
+                            <kbd>Ctrl+Shift+B</kbd>
+                        </div>
+                        <div class="shortcut-item">
+                            <span>Quick Add Site:</span>
+                            <kbd>Ctrl+Shift+A</kbd>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
         <div id="debug" class="debug-info">
-            <button id="testDNR" class="btn-secondary" style="margin: 10px;">Test DNR Rules</button>
+            <button id="testDNR" class="btn-secondary">Test DNR Rules</button>
         </div>
     </div>
     <script src="popup.js"></script>
