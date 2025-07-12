@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let focusMode = false;
     
     // Initialize
-    initializeExtension();
+    checkPasswordProtection();
     
     // Tab Management
     tabBtns.forEach(btn => {
@@ -83,6 +83,73 @@ document.addEventListener('DOMContentLoaded', () => {
             loadDashboardData();
         } else if (tabName === 'unlock') {
             loadUnlockData();
+        }
+    }
+    
+    // Password Protection Check
+    function checkPasswordProtection() {
+        chrome.storage.local.get(['settings'], (result) => {
+            const settings = result.settings || {};
+            if (settings.passwordProtection && settings.extensionPassword) {
+                showPasswordPrompt();
+            } else {
+                initializeExtension();
+            }
+        });
+    }
+    
+    function showPasswordPrompt() {
+        // Hide all content and show password prompt
+        document.querySelector('.container').style.display = 'none';
+        
+        // Create password prompt
+        const passwordPrompt = document.createElement('div');
+        passwordPrompt.id = 'passwordPrompt';
+        passwordPrompt.innerHTML = `
+            <div class="password-prompt">
+                <div class="password-header">
+                    <h2>🔒 Password Required</h2>
+                    <p>Enter your password to access Website Blocker Pro</p>
+                </div>
+                <div class="password-form">
+                    <input type="password" id="passwordInput" placeholder="Enter password" />
+                    <button id="passwordSubmit">Unlock</button>
+                </div>
+                <div class="password-error" id="passwordError" style="display: none;">
+                    Incorrect password. Please try again.
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(passwordPrompt);
+        
+        // Add event listeners
+        const passwordInput = document.getElementById('passwordInput');
+        const passwordSubmit = document.getElementById('passwordSubmit');
+        const passwordError = document.getElementById('passwordError');
+        
+        passwordInput.focus();
+        
+        passwordSubmit.addEventListener('click', verifyPassword);
+        passwordInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') verifyPassword();
+        });
+        
+        function verifyPassword() {
+            chrome.storage.local.get(['settings'], (result) => {
+                const settings = result.settings || {};
+                if (passwordInput.value === settings.extensionPassword) {
+                    // Correct password - show extension
+                    passwordPrompt.remove();
+                    document.querySelector('.container').style.display = 'flex';
+                    initializeExtension();
+                } else {
+                    // Wrong password
+                    passwordError.style.display = 'block';
+                    passwordInput.value = '';
+                    passwordInput.focus();
+                }
+            });
         }
     }
     
@@ -689,6 +756,7 @@ document.addEventListener('DOMContentLoaded', () => {
             passwordProtection.checked = settings.passwordProtection || false;
             if (settings.passwordProtection) {
                 passwordSection.style.display = 'block';
+                extensionPassword.value = settings.extensionPassword || '';
             }
         });
     }
@@ -700,9 +768,24 @@ document.addEventListener('DOMContentLoaded', () => {
         chrome.storage.local.get(['settings'], (result) => {
             const settings = result.settings || {};
             settings.passwordProtection = enabled;
+            if (!enabled) {
+                settings.extensionPassword = '';
+                extensionPassword.value = '';
+            }
             chrome.storage.local.set({ settings });
         });
     }
+    
+    // Save password when input changes
+    extensionPassword.addEventListener('input', () => {
+        if (passwordProtection.checked) {
+            chrome.storage.local.get(['settings'], (result) => {
+                const settings = result.settings || {};
+                settings.extensionPassword = extensionPassword.value;
+                chrome.storage.local.set({ settings });
+            });
+        }
+    });
     
     function exportExtensionData() {
         chrome.storage.local.get(null, (data) => {
