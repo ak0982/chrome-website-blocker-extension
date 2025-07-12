@@ -211,23 +211,43 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderList(sites, categories = {}) {
         blockedList.innerHTML = '';
         sites.forEach(site => {
-            const li = document.createElement('li');
+            const siteItem = document.createElement('div');
+            siteItem.className = 'site-item';
             const category = categories[site] || 'other';
             
-            li.innerHTML = `
+            // Get appropriate icon based on domain
+            const icon = getSiteIcon(site);
+            
+            siteItem.innerHTML = `
                 <div class="site-info">
-                    <div class="site-name">${site}</div>
-                    <div class="site-category">${category}</div>
+                    <div class="site-icon">${icon}</div>
+                    <div class="site-details">
+                        <span class="site-name">${site}</span>
+                        <span class="site-category">${category}</span>
+                    </div>
                 </div>
-                <button class="removeBtn" data-site="${site}">Remove</button>
+                <button class="remove-btn" data-site="${site}">
+                    <span class="remove-icon">×</span>
+                </button>
             `;
             
             // Add event listener for remove button
-            const removeBtn = li.querySelector('.removeBtn');
+            const removeBtn = siteItem.querySelector('.remove-btn');
             removeBtn.addEventListener('click', () => removeSite(site));
             
-            blockedList.appendChild(li);
+            blockedList.appendChild(siteItem);
         });
+    }
+    
+    function getSiteIcon(domain) {
+        const domainLower = domain.toLowerCase();
+        if (domainLower.includes('google') || domainLower.includes('gmail')) return '🌐';
+        if (domainLower.includes('facebook') || domainLower.includes('instagram') || domainLower.includes('twitter')) return '📱';
+        if (domainLower.includes('youtube') || domainLower.includes('netflix') || domainLower.includes('spotify')) return '🎬';
+        if (domainLower.includes('reddit') || domainLower.includes('discord')) return '🎮';
+        if (domainLower.includes('amazon') || domainLower.includes('ebay')) return '🛒';
+        if (domainLower.includes('github') || domainLower.includes('stackoverflow')) return '💻';
+        return '🌐';
     }
     
     function loadSites() {
