@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Website Blocker</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h2>Website Blocker</h2>
+    <input type="text" id="domainInput" placeholder="e.g. youtube.com">
+    <button id="addBtn">Add</button>
+    <div class="info-message">ℹ️ Blocking works for new tabs or address bar visits. If a site is already open, please close and reopen the tab for blocking to take effect!</div>
+    <ul id="blockedList"></ul>
+    <div id="debug" style="margin-top:16px; font-size:0.9em; color:#888;"></div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html> 
