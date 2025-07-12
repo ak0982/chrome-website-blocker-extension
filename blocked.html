@@ -12,180 +12,632 @@
         }
         
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             color: #333;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Animated background particles */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.3) 0%, transparent 50%);
+            animation: float 20s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            33% { transform: translateY(-20px) rotate(1deg); }
+            66% { transform: translateY(10px) rotate(-1deg); }
         }
         
         .container {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            padding: 40px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            box-shadow: 
+                0 25px 50px rgba(0,0,0,0.15),
+                0 0 0 1px rgba(255,255,255,0.1);
+            padding: 24px;
             text-align: center;
-            max-width: 500px;
-            margin: 20px;
+            max-width: 900px;
+            width: 100%;
+            max-height: 95vh;
+            overflow: hidden;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header {
+            margin-bottom: 16px;
+            position: relative;
+        }
+        
+        .icon-container {
+            position: relative;
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
         .icon {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 20px;
-            background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%);
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #ff6b9d 0%, #c44569 50%, #ff8a80 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 40px;
+            font-size: 28px;
             color: white;
+            box-shadow: 
+                0 10px 30px rgba(255, 107, 157, 0.4),
+                0 0 0 1px rgba(255,255,255,0.2);
+            animation: pulse 2s ease-in-out infinite;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .icon::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            background: linear-gradient(135deg, #ff6b9d, #c44569, #ff8a80);
+            border-radius: 50%;
+            z-index: -1;
+            opacity: 0.3;
+            animation: pulse 2s ease-in-out infinite reverse;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
         
         h1 {
-            color: #495057;
-            margin-bottom: 15px;
-            font-size: 28px;
-            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 6px;
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
         
         .subtitle {
-            color: #6c757d;
-            margin-bottom: 30px;
-            font-size: 16px;
-            line-height: 1.5;
+            color: #7f8c8d;
+            margin-bottom: 16px;
+            font-size: 14px;
+            line-height: 1.4;
+            font-weight: 400;
         }
         
         .blocked-site {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 30px;
-            border-left: 4px solid #667eea;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 12px 20px;
+            border-radius: 16px;
+            margin-bottom: 16px;
+            border: 2px solid rgba(102, 126, 234, 0.2);
+            display: inline-block;
+            min-width: 250px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .blocked-site::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+            animation: slide 3s infinite;
+        }
+        
+        @keyframes slide {
+            0% { left: -100%; }
+            50% { left: 100%; }
+            100% { left: 100%; }
         }
         
         .blocked-site strong {
-            color: #495057;
+            color: #2c3e50;
             font-size: 18px;
+            font-weight: 600;
+            position: relative;
+            z-index: 1;
         }
         
-        .actions {
+        .main-content {
             display: flex;
-            gap: 15px;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-bottom: 30px;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 16px;
         }
         
-        .btn {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 8px;
+        .motivational-full {
+            padding: 16px;
+            background: linear-gradient(135deg, rgba(46, 204, 113, 0.1) 0%, rgba(39, 174, 96, 0.1) 100%);
+            border-radius: 16px;
+            border: 2px solid rgba(46, 204, 113, 0.2);
+            position: relative;
+            overflow: hidden;
             cursor: pointer;
-            font-weight: 500;
-            text-decoration: none;
-            display: inline-block;
             transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
         }
         
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+        .motivational-full:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(46, 204, 113, 0.2);
+            border-color: rgba(46, 204, 113, 0.4);
         }
         
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        .motivational-full::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(46, 204, 113, 0.1), transparent);
+            animation: shine 4s infinite;
         }
         
-        .btn-secondary {
-            background: #6c757d;
-            color: white;
+        .motivational-full h3 {
+            color: #27ae60;
+            margin-bottom: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            position: relative;
+            z-index: 1;
         }
         
-        .btn-secondary:hover {
-            background: #5a6268;
-            transform: translateY(-2px);
+        .motivational-full p {
+            color: #2ecc71;
+            font-size: 13px;
+            line-height: 1.4;
+            position: relative;
+            z-index: 1;
+            font-style: italic;
+            font-weight: 500;
+        }
+        
+        .motivational-full .quote-author {
+            color: #27ae60;
+            font-size: 11px;
+            margin-top: 6px;
+            opacity: 0.8;
+            position: relative;
+            z-index: 1;
+            font-weight: 500;
+        }
+        
+        .middle-section {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 16px;
+            align-items: center;
+        }
+        
+        .focus-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+        
+        .bottom-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        
+        .left-column, .right-column {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
         
         .motivational {
-            margin-top: 30px;
             padding: 20px;
-            background: linear-gradient(135deg, #e8f5e8 0%, #d4edda 100%);
-            border-radius: 10px;
-            border-left: 4px solid #28a745;
+            background: linear-gradient(135deg, rgba(46, 204, 113, 0.1) 0%, rgba(39, 174, 96, 0.1) 100%);
+            border-radius: 20px;
+            border: 2px solid rgba(46, 204, 113, 0.2);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .motivational:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(46, 204, 113, 0.2);
+            border-color: rgba(46, 204, 113, 0.4);
+        }
+        
+        .motivational::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(46, 204, 113, 0.1), transparent);
+            animation: shine 4s infinite;
+        }
+        
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
         }
         
         .motivational h3 {
-            color: #155724;
-            margin-bottom: 10px;
+            color: #27ae60;
+            margin-bottom: 12px;
             font-size: 18px;
+            font-weight: 600;
+            position: relative;
+            z-index: 1;
         }
         
         .motivational p {
-            color: #155724;
+            color: #2ecc71;
             font-size: 14px;
-            line-height: 1.5;
+            line-height: 1.6;
+            position: relative;
+            z-index: 1;
+            font-style: italic;
+            font-weight: 500;
         }
         
-        .instructions {
-            margin-top: 20px;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            border-left: 4px solid #ffc107;
+        .quote-author {
+            color: #27ae60;
+            font-size: 12px;
+            margin-top: 8px;
+            opacity: 0.8;
+            position: relative;
+            z-index: 1;
+            font-weight: 500;
         }
         
-        .instructions h4 {
-            color: #856404;
+        .focus-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        
+        .stat-item {
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.1) 0%, rgba(41, 128, 185, 0.1) 100%);
+            padding: 12px 8px;
+            border-radius: 12px;
+            border: 2px solid rgba(52, 152, 219, 0.2);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(52, 152, 219, 0.2);
+            border-color: rgba(52, 152, 219, 0.4);
+        }
+        
+        .stat-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent, rgba(52, 152, 219, 0.05), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .stat-item:hover::before {
+            opacity: 1;
+        }
+        
+        .stat-number {
+            font-size: 20px;
+            font-weight: 700;
+            color: #2980b9;
+            margin-bottom: 3px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .stat-label {
+            font-size: 10px;
+            color: #3498db;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            font-weight: 600;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .productivity-tips {
+            padding: 12px;
+            background: linear-gradient(135deg, rgba(241, 196, 15, 0.1) 0%, rgba(243, 156, 18, 0.1) 100%);
+            border-radius: 16px;
+            border: 2px solid rgba(241, 196, 15, 0.2);
+            backdrop-filter: blur(10px);
+        }
+        
+        .productivity-tips h4 {
+            color: #f39c12;
             margin-bottom: 8px;
             font-size: 14px;
+            font-weight: 600;
         }
         
-        .instructions p {
-            color: #856404;
-            font-size: 12px;
+        .productivity-tips ul {
+            color: #e67e22;
+            font-size: 11px;
+            line-height: 1.3;
+            text-align: left;
+            padding-left: 16px;
+            list-style: none;
+        }
+        
+        .productivity-tips li {
+            margin-bottom: 4px;
+            position: relative;
+            padding-left: 16px;
+        }
+        
+        .productivity-tips li::before {
+            content: '✨';
+            position: absolute;
+            left: 0;
+            top: 0;
+            font-size: 10px;
+        }
+        
+        .time-saved {
+            padding: 12px;
+            background: linear-gradient(135deg, rgba(52, 73, 94, 0.1) 0%, rgba(44, 62, 80, 0.1) 100%);
+            border-radius: 16px;
+            border: 2px solid rgba(52, 73, 94, 0.2);
+            backdrop-filter: blur(10px);
+        }
+        
+        .time-saved h4 {
+            color: #34495e;
+            margin-bottom: 6px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .time-saved p {
+            color: #2c3e50;
+            font-size: 11px;
             line-height: 1.4;
         }
         
-        @media (max-width: 600px) {
+        .encouragement {
+            padding: 12px;
+            background: linear-gradient(135deg, rgba(231, 76, 60, 0.1) 0%, rgba(192, 57, 43, 0.1) 100%);
+            border-radius: 16px;
+            border: 2px solid rgba(231, 76, 60, 0.2);
+            backdrop-filter: blur(10px);
+        }
+        
+        .encouragement h4 {
+            color: #e74c3c;
+            margin-bottom: 6px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .encouragement p {
+            color: #c0392b;
+            font-size: 11px;
+            line-height: 1.4;
+        }
+        
+        .footer {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 2px solid rgba(102, 126, 234, 0.1);
+            font-size: 11px;
+            color: #7f8c8d;
+            font-weight: 500;
+        }
+        
+        @media (max-width: 768px) {
             .container {
-                padding: 30px 20px;
-                margin: 10px;
+                padding: 24px;
+                max-height: 95vh;
             }
             
-            .actions {
-                flex-direction: column;
+            .middle-section {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .bottom-section {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .focus-stats {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 10px;
+            }
+            
+            .stat-item {
+                padding: 12px 8px;
+            }
+            
+            .stat-number {
+                font-size: 20px;
+            }
+            
+            .stat-label {
+                font-size: 10px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            .subtitle {
+                font-size: 14px;
+            }
+            
+            .motivational-full h3 {
+                font-size: 18px;
+            }
+            
+            .motivational-full p {
+                font-size: 14px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+            
+            .focus-stats {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            
+            .stat-item {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 12px 16px;
+            }
+            
+            .stat-number {
+                font-size: 18px;
+                margin-bottom: 0;
+            }
+            
+            .icon {
+                width: 60px;
+                height: 60px;
+                font-size: 28px;
+            }
+            
+            .motivational-full {
+                padding: 20px;
+            }
+            
+            .motivational-full h3 {
+                font-size: 16px;
+            }
+            
+            .motivational-full p {
+                font-size: 13px;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="icon">🚫</div>
-        <h1>Site Blocked</h1>
-        <p class="subtitle">This website has been blocked by Website Blocker Pro to help you stay focused and productive.</p>
-        
-        <div class="blocked-site">
-            <strong id="blockedDomain">Loading...</strong>
+        <div class="header">
+            <div class="icon-container">
+                <div class="icon">🚫</div>
+            </div>
+            <h1>Site Blocked</h1>
+            <p class="subtitle">This website has been blocked to help you stay focused and achieve your goals.</p>
+            
+            <div class="blocked-site">
+                <strong id="blockedDomain">Loading...</strong>
+            </div>
         </div>
         
-        <div class="actions">
-            <button class="btn btn-primary" id="goBackBtn">Go Back</button>
-            <button class="btn btn-secondary" id="openExtensionBtn">Extension Settings</button>
+        <div class="main-content">
+            <!-- Top Section: Main Motivational Quote -->
+            <div class="motivational-full">
+                <h3 id="motivationalTitle">🎯 Stay Focused!</h3>
+                <p id="motivationalQuote">Loading motivational thought...</p>
+                <div class="quote-author" id="quoteAuthor"></div>
+            </div>
+            
+            <!-- Middle Section: Stats and Time Message -->
+            <div class="middle-section">
+                <div class="focus-stats">
+                    <div class="stat-item">
+                        <div class="stat-number" id="blocksToday">0</div>
+                        <div class="stat-label">Blocks Today</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="timeSaved">0</div>
+                        <div class="stat-label">Minutes Saved</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="focusScore">0%</div>
+                        <div class="stat-label">Focus Score</div>
+                    </div>
+                </div>
+                
+                <div class="time-saved">
+                    <h4>⏰ Time is your most valuable asset</h4>
+                    <p>Every minute you spend focused brings you closer to your goals. You're building discipline and creating the life you want.</p>
+                </div>
+            </div>
+            
+            <!-- Bottom Section: Actionable Content -->
+            <div class="bottom-section">
+                <div class="productivity-tips">
+                    <h4>💡 What you can do instead:</h4>
+                    <ul>
+                        <li>Work on your most important task</li>
+                        <li>Take a short break and stretch</li>
+                        <li>Read something educational</li>
+                        <li>Plan your next steps</li>
+                        <li>Practice deep breathing</li>
+                    </ul>
+                </div>
+                
+                <div class="encouragement">
+                    <h4>🌟 You're doing great!</h4>
+                    <p>Remember, every time you choose focus over distraction, you're strengthening your willpower and moving toward success.</p>
+                </div>
+            </div>
         </div>
         
-        <div class="motivational">
-            <h3>🎯 Stay Focused!</h3>
-            <p>Every blocked distraction brings you closer to your goals. You're building better habits and improving your productivity.</p>
-        </div>
-        
-        <div class="instructions">
-            <h4>💡 Need to access this site temporarily?</h4>
-            <p>Open the extension popup and go to the "Temporary Unlock" tab to unlock this site for a specific duration.</p>
+        <div class="footer">
+            <p>💪 Keep going! Your future self will thank you for staying focused today.</p>
         </div>
     </div>
+    
+    <script src="content-script.js"></script>
 </body>
 </html>
+
