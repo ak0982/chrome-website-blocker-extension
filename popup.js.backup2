@@ -494,10 +494,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <span class="site-name">${unlock.site}</span>
                         <span class="site-category">${minutesLeft} min left</span>
                     </div>
-                    </div>
-                <button class="remove-btn" data-site="${unlock.site}">
-                    <span class="remove-icon">×</span>
-                </button>
+                    <button class="remove-btn" data-site="${unlock.site}"><span class="remove-icon">×</span></button>
                 `;
                 
                 const removeBtn = unlockItem.querySelector('.remove-btn');
