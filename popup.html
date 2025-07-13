@@ -112,33 +112,26 @@
             min-width: 0 !important;
         }
         .site-icon {
-            width: 44px !important;
-            height: 44px !important;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
-            border-radius: 12px !important;
+            width: 32px !important;
+            height: 32px !important;
             display: flex !important;
             align-items: center !important;
             justify-content: center !important;
-            font-size: 18px !important;
-            color: white !important;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2) !important;
             flex-shrink: 0 !important;
             position: relative !important;
-            overflow: hidden !important;
+            background: transparent !important;
         }
-        .site-icon::after {
-            content: '' !important;
-            position: absolute !important;
-            top: 0 !important;
-            left: -100% !important;
-            width: 100% !important;
-            height: 100% !important;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent) !important;
-            transition: left 0.6s ease !important;
+        .site-icon img {
+            width: 32px !important;
+            height: 32px !important;
+            object-fit: contain !important;
+            image-rendering: -webkit-optimize-contrast !important;
+            image-rendering: crisp-edges !important;
+            image-rendering: pixelated !important;
+            filter: none !important;
         }
-        .site-item:hover .site-icon::after {
-            left: 100% !important;
-        }
+
+
         .site-details {
             display: flex !important;
             flex-direction: column !important;

@@ -298,7 +298,9 @@ document.addEventListener('DOMContentLoaded', () => {
             
             siteItem.innerHTML = `
                 <div class="site-info">
-                    <div class="site-icon">${icon}</div>
+                    <div class="site-icon">
+                        ${icon}
+                    </div>
                     <div class="site-details">
                         <span class="site-name">${site}</span>
                         <span class="site-category">${category}</span>
@@ -319,13 +321,68 @@ document.addEventListener('DOMContentLoaded', () => {
     
     function getSiteIcon(domain) {
         const domainLower = domain.toLowerCase();
-        if (domainLower.includes('google') || domainLower.includes('gmail')) return '🌐';
-        if (domainLower.includes('facebook') || domainLower.includes('instagram') || domainLower.includes('twitter')) return '📱';
-        if (domainLower.includes('youtube') || domainLower.includes('netflix') || domainLower.includes('spotify')) return '🎬';
-        if (domainLower.includes('reddit') || domainLower.includes('discord')) return '🎮';
-        if (domainLower.includes('amazon') || domainLower.includes('ebay')) return '🛒';
-        if (domainLower.includes('github') || domainLower.includes('stackoverflow')) return '💻';
-        return '🌐';
+        
+        // Return high-quality logo URLs for popular websites
+        if (domainLower.includes('google') || domainLower.includes('gmail')) {
+            return `<img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png" alt="Google" onerror="this.src='https://www.google.com/favicon.ico';" />`;
+        }
+        if (domainLower.includes('facebook')) {
+            return `<img src="https://static.xx.fbcdn.net/rsrc.php/v3/y-/r/yXM3FgMdVNX.png" alt="Facebook" onerror="this.src='https://www.facebook.com/favicon.ico';" />`;
+        }
+        if (domainLower.includes('instagram')) {
+            return `<img src="https://www.instagram.com/static/images/ico/favicon-200.png/ab6eff595bb1.png" alt="Instagram" onerror="this.src='https://www.instagram.com/favicon.ico';" />`;
+        }
+        if (domainLower.includes('twitter') || domainLower.includes('x.com')) {
+            return `<img src="https://abs.twimg.com/responsive-web/client-web/icon-ios.b1fc727a.png" alt="Twitter" onerror="this.src='https://twitter.com/favicon.ico';" />`;
+        }
+        if (domainLower.includes('youtube')) {
+            return `<img src="https://www.youtube.com/s/desktop/7c155e84/img/favicon_144x144.png" alt="YouTube" onerror="this.src='https://www.youtube.com/favicon.ico';" />`;
+        }
+        if (domainLower.includes('netflix')) {
+            return `<img src="https://assets.nflxext.com/us/ffe/siteui/common/icons/iconNetflix.png" alt="Netflix" onerror="this.src='https://www.netflix.com/favicon.ico';" />`;
+        }
+        if (domainLower.includes('spotify')) {
+            return `<img src="https://open.scdn.co/cdn/images/favicon.0f31d2ea.ico" alt="Spotify" onerror="this.src='https://www.spotify.com/favicon.ico';" />`;
+        }
+        if (domainLower.includes('reddit')) {
+            return `<img src="https://www.redditstatic.com/desktop2x/img/favicon/android-icon-192x192.png" alt="Reddit" onerror="this.src='https://www.reddit.com/favicon.ico';" />`;
+        }
+        if (domainLower.includes('discord')) {
+            return `<img src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a6a49cf127bf92de1e2_icon_clyde_white_RGB.png" alt="Discord" onerror="this.src='https://discord.com/favicon.ico';" />`;
+        }
+        if (domainLower.includes('amazon')) {
+            return `<img src="https://images-na.ssl-images-amazon.com/images/G/01/gc/designs/livepreview/amazon_dkblue_noto_email_v2016_us-main._CB468775337_.png" alt="Amazon" onerror="this.src='https://www.amazon.com/favicon.ico';" />`;
+        }
+        if (domainLower.includes('ebay')) {
+            return `<img src="https://ir.ebaystatic.com/cr/v/c1/ebay-logo-1-1200x630-margin.png" alt="eBay" onerror="this.src='https://www.ebay.com/favicon.ico';" />`;
+        }
+        if (domainLower.includes('github')) {
+            return `<img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="GitHub" onerror="this.src='https://github.com/favicon.ico';" />`;
+        }
+        if (domainLower.includes('stackoverflow')) {
+            return `<img src="https://cdn.sstatic.net/Sites/stackoverflow/Img/apple-touch-icon@2.png" alt="Stack Overflow" onerror="this.src='https://stackoverflow.com/favicon.ico';" />`;
+        }
+        if (domainLower.includes('linkedin')) {
+            return `<img src="https://content.linkedin.com/content/dam/me/business/en-us/amp/brand-site/v2/bg/LI-Bug.svg.original.svg" alt="LinkedIn" onerror="this.src='https://www.linkedin.com/favicon.ico';" />`;
+        }
+        if (domainLower.includes('whatsapp')) {
+            return `<img src="https://static.whatsapp.net/rsrc.php/v3/yP/r/rYZqPCBaG70.png" alt="WhatsApp" onerror="this.src='https://www.whatsapp.com/favicon.ico';" />`;
+        }
+        if (domainLower.includes('tiktok')) {
+            return `<img src="https://sf16-va.tiktokcdn.com/obj/eden-va2/uhapnehs7nulqpaqj/TikTok_Logo_Without_Text.png" alt="TikTok" onerror="this.src='https://www.tiktok.com/favicon.ico';" />`;
+        }
+        if (domainLower.includes('snapchat')) {
+            return `<img src="https://storage.googleapis.com/snap-inc/brand-guidelines/snapchat-ghost-logo.png" alt="Snapchat" onerror="this.src='https://www.snapchat.com/favicon.ico';" />`;
+        }
+        if (domainLower.includes('pinterest')) {
+            return `<img src="https://about.pinterest.com/sites/default/files/2018-05/Pinterest_Logo_Red.png" alt="Pinterest" onerror="this.src='https://www.pinterest.com/favicon.ico';" />`;
+        }
+        if (domainLower.includes('twitch')) {
+            return `<img src="https://assets.stickpng.com/images/580b57fcd9996e24bc43c540.png" alt="Twitch" onerror="this.src='https://www.twitch.tv/favicon.ico';" />`;
+        }
+        
+        // For other domains, try to get their high-quality logo
+        return `<img src="https://${domain}/apple-touch-icon.png" alt="${domain}" onerror="this.src='https://${domain}/favicon.ico';" />`;
     }
     
     function loadSites() {
@@ -509,9 +566,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 const unlockItem = document.createElement('div');
                 unlockItem.className = 'site-item';
+                const siteIcon = getSiteIcon(unlock.site);
                 unlockItem.innerHTML = `
                     <div class="site-info">
-                    <div class="site-icon">🔓</div>
+                    <div class="site-icon">
+                        ${siteIcon}
+                    </div>
                     <div class="site-details">
                         <span class="site-name">${unlock.site}</span>
                         <span class="site-category">${minutesLeft} min left</span>
