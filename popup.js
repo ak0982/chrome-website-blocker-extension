@@ -439,7 +439,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 // Reset form
                 unlockSiteSelect.value = '';
-                unlockDuration.value = '60';
+                unlockDuration.value = '1';
                 customDurationRow.style.display = 'none';
                 customDurationInput.value = '';
                 
