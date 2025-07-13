@@ -287,8 +287,6 @@ document.addEventListener('DOMContentLoaded', () => {
             
             siteItem.innerHTML = `
                 <div class="site-info">
-                    <div class="site-icon">🔓</div>
-                    <div class="site-details">
                     <div class="site-icon">${icon}</div>
                     <div class="site-details">
                         <span class="site-name">${site}</span>
@@ -335,7 +333,8 @@ document.addEventListener('DOMContentLoaded', () => {
             
             let filteredSites = sites.filter(site => {
                 const matchesSearch = site.toLowerCase().includes(searchTerm);
-                const matchesCategory = !categoryFilter || categories[site] === categoryFilter;
+                const siteCategory = categories[site] || 'other';
+                const matchesCategory = !categoryFilter || siteCategory === categoryFilter;
                 return matchesSearch && matchesCategory;
             });
             
@@ -594,7 +593,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const li = document.createElement('li');
                 li.innerHTML = `
                     <span>${site}</span>
-                    <button class="removeBtn" data-site="${site}"><span class="remove-icon">×</span></button>
+                    <button class="removeBtn" data-site="${site}">Remove</button>
                 `;
                 
                 // Add event listener for remove button
@@ -646,7 +645,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 div.className = 'category-item';
                 div.innerHTML = `
                     <span>${category}</span>
-                    <button class="removeBtn" data-category="${category}"><span class="remove-icon">×</span></button>
+                    <button class="removeBtn" data-category="${category}">Remove</button>
                 `;
                 
                 // Add event listener for remove button
