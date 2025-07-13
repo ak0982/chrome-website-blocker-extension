@@ -59,9 +59,17 @@ document.addEventListener('DOMContentLoaded', () => {
     let timerRunning = false;
     let timerTime = 25 * 60; // 25 minutes in seconds
     let focusMode = false;
+    let activeUnlocksUpdateTimer; // Timer for updating active unlocks display
     
     // Initialize
     checkPasswordProtection();
+    
+    // Cleanup timer when popup is closed
+    window.addEventListener('beforeunload', () => {
+        if (activeUnlocksUpdateTimer) {
+            clearInterval(activeUnlocksUpdateTimer);
+        }
+    });
     
     // Tab Management
     tabBtns.forEach(btn => {
@@ -161,6 +169,9 @@ document.addEventListener('DOMContentLoaded', () => {
         loadSettings();
         setupEventListeners();
         updateStatusIndicator();
+        
+        // Start active unlocks timer
+        startActiveUnlocksTimer();
     }
     
     // Event Listeners
@@ -432,8 +443,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 customDurationRow.style.display = 'none';
                 customDurationInput.value = '';
                 
-                // Reload unlock data
-                loadUnlockData();
+                // Update active unlocks display
+                updateActiveUnlocks();
             });
         });
     }
@@ -452,36 +463,48 @@ document.addEventListener('DOMContentLoaded', () => {
                     syncDNRRules(blockResult.blockedSites || []);
                 });
                 
-                loadUnlockData();
+                updateActiveUnlocks();
             });
         });
     }
     
-    function loadUnlockData() {
-        // Load blocked sites for dropdown
-        chrome.storage.local.get(['blockedSites'], (result) => {
-            const blockedSites = result.blockedSites || [];
-            unlockSiteSelect.innerHTML = '<option value="">Choose a blocked site...</option>';
-            blockedSites.forEach(site => {
-                const option = document.createElement('option');
-                option.value = site;
-                option.textContent = site;
-                unlockSiteSelect.appendChild(option);
-            });
-        });
-        
-        // Load active unlocks
+    // Update active unlocks display and remove expired ones
+    function updateActiveUnlocks() {
         chrome.storage.local.get(['temporaryUnlocks'], (result) => {
-            const activeUnlocks = result.temporaryUnlocks || [];
+            let activeUnlocks = result.temporaryUnlocks || [];
+            const now = Date.now();
+            
+            // Filter out expired unlocks
+            const validUnlocks = activeUnlocks.filter(unlock => unlock.endTime > now);
+            
+            // If we removed any expired unlocks, update storage
+            if (validUnlocks.length !== activeUnlocks.length) {
+                const expiredUnlocks = activeUnlocks.filter(unlock => unlock.endTime <= now);
+                chrome.storage.local.set({ temporaryUnlocks: validUnlocks }, () => {
+                    console.log('Removed expired unlocks from storage');
+                    
+                    // Show notifications for expired unlocks
+                    expiredUnlocks.forEach(unlock => {
+                        addActivity(`${unlock.site} unlock expired`);
+                    });
+                    
+                    // Update DNR rules to reflect the removed unlocks
+                    chrome.storage.local.get(['blockedSites'], (blockResult) => {
+                        syncDNRRules(blockResult.blockedSites || []);
+                    });
+                });
+            }
+            
+            // Update the display
             activeUnlocksList.innerHTML = '';
             
-            if (activeUnlocks.length === 0) {
+            if (validUnlocks.length === 0) {
                 activeUnlocksList.innerHTML = '<p class="no-unlocks">No active unlocks</p>';
                 return;
             }
             
-            activeUnlocks.forEach(unlock => {
-                const timeLeft = Math.max(0, unlock.endTime - Date.now());
+            validUnlocks.forEach(unlock => {
+                const timeLeft = Math.max(0, unlock.endTime - now);
                 const minutesLeft = Math.ceil(timeLeft / (60 * 1000));
                 
                 const unlockItem = document.createElement('div');
@@ -505,6 +528,39 @@ document.addEventListener('DOMContentLoaded', () => {
                 activeUnlocksList.appendChild(unlockItem);
             });
         });
+    }
+    
+    // Start timer to update active unlocks display
+    function startActiveUnlocksTimer() {
+        // Clear existing timer
+        if (activeUnlocksUpdateTimer) {
+            clearInterval(activeUnlocksUpdateTimer);
+        }
+        
+        // Update every minute
+        activeUnlocksUpdateTimer = setInterval(() => {
+            updateActiveUnlocks();
+        }, 60000); // Update every minute
+        
+        // Also update immediately
+        updateActiveUnlocks();
+    }
+    
+    function loadUnlockData() {
+        // Load blocked sites for dropdown
+        chrome.storage.local.get(['blockedSites'], (result) => {
+            const blockedSites = result.blockedSites || [];
+            unlockSiteSelect.innerHTML = '<option value="">Choose a blocked site...</option>';
+            blockedSites.forEach(site => {
+                const option = document.createElement('option');
+                option.value = site;
+                option.textContent = site;
+                unlockSiteSelect.appendChild(option);
+            });
+        });
+        
+        // Start the active unlocks timer
+        startActiveUnlocksTimer();
         
         // Load unlock history
         chrome.storage.local.get(['unlockHistory'], (result) => {
