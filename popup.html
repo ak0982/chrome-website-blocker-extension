@@ -505,7 +505,7 @@
         <!-- Premium Navigation Tabs -->
         <nav class="premium-tabs">
             <button class="tab-btn active" data-tab="blocking">
-                <span class="tab-icon">🛡️</span>
+                <span class="tab-icon">🚫</span>
                 <span class="tab-text">Blocking</span>
             </button>
             <button class="tab-btn" data-tab="unlock">
@@ -517,11 +517,11 @@
                 <span class="tab-text">Whitelist</span>
             </button>
             <button class="tab-btn" data-tab="categories">
-                <span class="tab-icon">📁</span>
+                <span class="tab-icon">🏷️</span>
                 <span class="tab-text">Categories</span>
             </button>
             <button class="tab-btn" data-tab="dashboard">
-                <span class="tab-icon">📊</span>
+                <span class="tab-icon">📈</span>
                 <span class="tab-text">Dashboard</span>
             </button>
             <button class="tab-btn" data-tab="settings">
@@ -533,7 +533,7 @@
         <!-- Blocking Tab -->
         <div class="tab-content active" id="blocking">
             <div class="content-header">
-                <h2>🛡️ Site Blocking</h2>
+                <h2>🚫 Site Blocking</h2>
                 <p>Add websites to your block list to stay focused and productive</p>
             </div>
             
@@ -541,7 +541,7 @@
                 <div class="premium-input-section">
                     <div class="category-selector">
                         <select id="categorySelect" class="premium-select">
-                            <option value="">📂 Select Category</option>
+                            <option value="">🏷️ Select Category</option>
                             <option value="social">📱 Social Media</option>
                             <option value="gaming">🎮 Gaming</option>
                             <option value="shopping">🛒 Shopping</option>
@@ -555,7 +555,7 @@
                         <div class="input-wrapper">
                             <input type="text" id="domainInput" placeholder="Enter domain (e.g., facebook.com)">
                             <button id="addBtn" class="btn-primary">
-                                <span class="btn-icon">+</span>
+                                <span class="btn-icon">➕</span>
                                 <span class="btn-text">Add</span>
                             </button>
                         </div>
@@ -567,7 +567,7 @@
                         <h3>🚫 Blocked Sites</h3>
                         <div class="filter-controls">
                             <select id="categoryFilter" class="premium-select">
-                                <option value="">📂 All Categories</option>
+                                <option value="">🏷️ All Categories</option>
                                 <option value="social">📱 Social Media</option>
                                 <option value="gaming">🎮 Gaming</option>
                                 <option value="shopping">🛒 Shopping</option>
@@ -576,7 +576,7 @@
                                 <option value="other">📌 Other</option>
                             </select>
                             <div class="search-wrapper">
-                                <input type="text" id="searchInput" placeholder="🔍 Search sites...">
+                                <input type="text" id="searchInput" placeholder="🔎 Search sites...">
                             </div>
                         </div>
                     </div>
@@ -646,7 +646,7 @@
                     <div class="unlock-form">
                         <div class="form-row">
                             <div class="form-field">
-                                <label>🌐 Select Site</label>
+                                <label>🔗 Select Site</label>
                                 <select id="unlockSiteSelect" class="premium-select">
                                     <option value="">Choose a blocked site...</option>
                                     <option value="facebook.com">facebook.com</option>
@@ -654,7 +654,7 @@
                                 </select>
                             </div>
                             <div class="form-field">
-                                <label>⏰ Duration</label>
+                                <label>⏱️ Duration</label>
                                 <select id="unlockDuration" class="premium-select">
                                     <option value="1" selected>⚡ 1 minute</option>
                                     <option value="5">⚡ 5 minutes</option>
@@ -688,7 +688,7 @@
                     
                     <div class="unlock-sections">
                         <div class="unlock-section">
-                            <h4>🕐 Active Unlocks</h4>
+                            <h4>⏰ Active Unlocks</h4>
                             <div id="activeUnlocksList" class="unlocks-list">
                                 <div class="unlock-item">
                                     <div class="unlock-info">
@@ -766,7 +766,7 @@
                         <div class="input-wrapper">
                             <input type="text" id="whitelistInput" placeholder="Enter domain to whitelist">
                             <button id="addWhitelistBtn" class="btn-primary">
-                                <span class="btn-icon">+</span>
+                                <span class="btn-icon">➕</span>
                                 <span class="btn-text">Add</span>
                             </button>
                         </div>
@@ -804,7 +804,7 @@
         <!-- Categories Tab -->
         <div class="tab-content" id="categories">
             <div class="content-header">
-                <h2>📁 Category Management</h2>
+                <h2>🏷️ Category Management</h2>
                 <p>Organize your blocked sites into custom categories</p>
             </div>
             
@@ -814,7 +814,7 @@
                         <div class="input-wrapper">
                             <input type="text" id="newCategoryInput" placeholder="New category name">
                             <button id="addCategoryBtn" class="btn-primary">
-                                <span class="btn-icon">+</span>
+                                <span class="btn-icon">➕</span>
                                 <span class="btn-text">Add Category</span>
                             </button>
                         </div>
@@ -836,14 +836,14 @@
         <!-- Dashboard Tab -->
         <div class="tab-content" id="dashboard">
             <div class="content-header">
-                <h2>📊 Productivity Dashboard</h2>
+                <h2>📈 Productivity Dashboard</h2>
                 <p>Track your focus progress and productivity metrics</p>
             </div>
             
             <div class="dashboard-content">
                 <div class="dashboard-stats">
                     <div class="stat-card">
-                        <div class="stat-icon">🛡️</div>
+                        <div class="stat-icon">🚫</div>
                         <div class="stat-content">
                             <h4>Today's Blocks</h4>
                             <div class="stat-number" id="todayBlocks">12</div>
@@ -885,7 +885,7 @@
                 </div>
                 
                 <div class="recent-activity">
-                    <h3>📝 Recent Activity</h3>
+                    <h3>📋 Recent Activity</h3>
                     <div id="recentActivity">
                         <div class="activity-item">
                             <span class="activity-text">Blocked facebook.com</span>
@@ -910,7 +910,7 @@
             <div class="settings-content">
                 <div class="settings-sections">
                     <div class="settings-section">
-                        <h3>🔔 General Settings</h3>
+                        <h3>⚙️ General Settings</h3>
                         <div class="setting-item">
                             <label class="toggle-label">
                                 <input type="checkbox" id="notificationsEnabled" checked>
