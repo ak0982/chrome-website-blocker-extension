@@ -286,6 +286,39 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
+    function getCategoryIcon(category) {
+        const categoryLower = category.toLowerCase();
+        
+        switch (categoryLower) {
+            case 'social':
+                return '📱';
+            case 'gaming':
+                return '🎮';
+            case 'shopping':
+                return '🛒';
+            case 'entertainment':
+                return '🎬';
+            case 'news':
+                return '📰';
+            case 'development':
+                return '💻';
+            case 'communication':
+                return '💬';
+            case 'productivity':
+                return '⚡';
+            case 'education':
+                return '📚';
+            case 'finance':
+                return '💰';
+            case 'health':
+                return '🏥';
+            case 'travel':
+                return '✈️';
+            default:
+                return '📌';
+        }
+    }
+    
     function renderList(sites, categories = {}) {
         blockedList.innerHTML = '';
         sites.forEach(site => {
@@ -295,6 +328,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Get appropriate icon based on domain
             const icon = getSiteIcon(site);
+            const categoryIcon = getCategoryIcon(category);
             
             siteItem.innerHTML = `
                 <div class="site-info">
@@ -302,8 +336,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         ${icon}
                     </div>
                     <div class="site-details">
-                        <span class="site-name">${site}</span>
-                        <span class="site-category">${category}</span>
+                        <span class="site-name">
+                            <span class="category-icon-inline">${categoryIcon}</span>
+                            ${site}
+                        </span>
                     </div>
                 </div>
                 <button class="remove-btn" data-site="${site}">
