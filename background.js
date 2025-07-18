@@ -342,17 +342,37 @@ function openQuickAdd() {
 // Context menu
 function setupContextMenu() {
     chrome.contextMenus.removeAll(() => {
-        chrome.contextMenus.create({
-            id: 'blockSite',
-            title: 'Block this site',
-            contexts: ['page']
-        });
-        
-        chrome.contextMenus.create({
-            id: 'whitelistSite',
-            title: 'Whitelist this site',
-            contexts: ['page']
-        });
+        // Add a short delay to ensure removal before creation
+        setTimeout(() => {
+            try {
+                chrome.contextMenus.create({
+                    id: 'blockSite',
+                    title: 'Block this site',
+                    contexts: ['page']
+                });
+            } catch (e) {
+                if (chrome.runtime.lastError && chrome.runtime.lastError.message.includes('duplicate id')) {
+                    // Ignore duplicate ID error
+                    console.warn('Context menu with id blockSite already exists.');
+                } else {
+                    throw e;
+                }
+            }
+            try {
+                chrome.contextMenus.create({
+                    id: 'whitelistSite',
+                    title: 'Whitelist this site',
+                    contexts: ['page']
+                });
+            } catch (e) {
+                if (chrome.runtime.lastError && chrome.runtime.lastError.message.includes('duplicate id')) {
+                    // Ignore duplicate ID error
+                    console.warn('Context menu with id whitelistSite already exists.');
+                } else {
+                    throw e;
+                }
+            }
+        }, 100);
     });
 }
 

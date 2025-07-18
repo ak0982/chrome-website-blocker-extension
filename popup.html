@@ -4,7 +4,8 @@
     <meta charset="utf-8">
     <link rel="stylesheet" href="styles.css?v=1.0.3">
     <title>Website Blocker Pro</title>
-    <style>
+    <!-- REMOVE INLINE STYLE BLOCK TO ALLOW styles.css TO CONTROL THEME -->
+    <!-- <style>
         /* Debug styles to ensure visibility */
         body {
             width: 500px !important;
@@ -481,7 +482,7 @@
             margin-bottom: 16px !important;
             letter-spacing: -0.3px !important;
         }
-    </style>
+    </style> -->
 </head>
 <body>
     <div class="container">
@@ -916,6 +917,13 @@
                                 <input type="checkbox" id="notificationsEnabled" checked>
                                 <span class="toggle-slider"></span>
                                 <span class="toggle-text">Enable Notifications</span>
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <label class="toggle-label">
+                                <input type="checkbox" id="darkModeToggle">
+                                <span class="toggle-slider"></span>
+                                <span class="toggle-text">Enable Dark Mode</span>
                             </label>
                         </div>
                         <div class="setting-item">

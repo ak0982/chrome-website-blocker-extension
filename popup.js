@@ -50,6 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const exportData = document.getElementById('exportData');
     const importData = document.getElementById('importData');
     const importFile = document.getElementById('importFile');
+    const darkModeToggle = document.getElementById('darkModeToggle');
     
     // Debug Elements
     const testDNR = document.getElementById('testDNR');
@@ -63,6 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Initialize
     checkPasswordProtection();
+    initializeDarkMode();
     
     // Cleanup timer when popup is closed
     window.addEventListener('beforeunload', () => {
@@ -927,7 +929,32 @@ document.addEventListener('DOMContentLoaded', () => {
                 passwordSection.style.display = 'block';
                 extensionPassword.value = settings.extensionPassword || '';
             }
+            // Dark mode
+            darkModeToggle.checked = settings.darkMode === true;
+            setDarkMode(settings.darkMode === true);
         });
+    }
+    
+    // Dark Mode Logic
+    function initializeDarkMode() {
+        // On toggle
+        darkModeToggle.addEventListener('change', () => {
+            const enabled = darkModeToggle.checked;
+            setDarkMode(enabled);
+            chrome.storage.local.get(['settings'], (result) => {
+                const settings = result.settings || {};
+                settings.darkMode = enabled;
+                chrome.storage.local.set({ settings });
+            });
+        });
+    }
+
+    function setDarkMode(enabled) {
+        if (enabled) {
+            document.body.classList.add('dark-mode');
+        } else {
+            document.body.classList.remove('dark-mode');
+        }
     }
     
     function togglePasswordProtection() {
