@@ -79,7 +79,7 @@
     --background-shadow-whitelist: 0 2px 10px rgba(0,0,0,0.05);
     --background-shadow-categories: 0 2px 10px rgba(0,0,0,0.05);
     --background-shadow-debug: 0 2px 10px rgba(0,0,0,0.05);
-    --text-main: #2d3748;
+    --text-main: #1a202c;
     --text-secondary: #4a5568;
     --text-muted: #718096;
     --text-inverse: #ffffff;
@@ -1454,4 +1454,15 @@ body, .container {
 }
 .stat-content h4, .activity-time {
     color: var(--text-secondary) !important;
+}
+
+.dashboard-stats *, .recent-activity *, .unlocks-list *, .history-list *, .unlock-item *, .site-item *, .stat-card *, .focus-timer * {
+    color: var(--text-main) !important;
+}
+.dashboard-stats .stat-content h4, .recent-activity .activity-time, .unlocks-list .unlock-time, .history-list .unlock-time {
+    color: var(--text-secondary) !important;
+}
+
+.section-header h3, .tab-btn .tab-text, .content-header h2, .content-header p, .settings-section h3, .dashboard-content h2, .categories-content h2, .whitelist-content h2, .unlock-content h2 {
+    color: var(--text-main) !important;
 }
