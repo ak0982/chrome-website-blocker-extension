@@ -51,6 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const importData = document.getElementById('importData');
     const importFile = document.getElementById('importFile');
     const darkModeToggle = document.getElementById('darkModeToggle');
+    const accentColorPicker = document.getElementById('accentColorPicker');
     
     // Debug Elements
     const testDNR = document.getElementById('testDNR');
@@ -65,6 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize
     checkPasswordProtection();
     initializeDarkMode();
+    initializeAccentColor();
     
     // Cleanup timer when popup is closed
     window.addEventListener('beforeunload', () => {
@@ -1295,5 +1297,38 @@ document.addEventListener('DOMContentLoaded', () => {
             // Also sync DNR rules
             syncDNRRules(result.blockedSites || []);
         });
+    }
+
+    // Accent Color Picker Logic
+    function initializeAccentColor() {
+        // Restore saved accent color
+        chrome.storage.local.get(['settings'], (result) => {
+            const settings = result.settings || {};
+            if (settings.accentColor) {
+                setAccentColor(settings.accentColor);
+                accentColorPicker.value = settings.accentColor;
+            } else {
+                accentColorPicker.value = getComputedStyle(document.documentElement).getPropertyValue('--accent-color').trim() || '#667eea';
+            }
+        });
+        // On color change
+        accentColorPicker.addEventListener('input', () => {
+            setAccentColor(accentColorPicker.value);
+            chrome.storage.local.get(['settings'], (result) => {
+                const settings = result.settings || {};
+                settings.accentColor = accentColorPicker.value;
+                chrome.storage.local.set({ settings });
+            });
+        });
+    }
+    function setAccentColor(color) {
+        document.documentElement.style.setProperty('--accent-color', color);
+        // Also update gradients that use accent color
+        document.documentElement.style.setProperty('--background-header', `linear-gradient(135deg, ${color} 0%, #764ba2 100%)`);
+        document.documentElement.style.setProperty('--background-tab', `rgba(255,255,255,0.95)`);
+        // For dark mode
+        if (document.body.classList.contains('dark-mode')) {
+            document.documentElement.style.setProperty('--background-header', `linear-gradient(135deg, #23262f 0%, ${color} 100%)`);
+        }
     }
 });
