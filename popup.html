@@ -504,35 +504,35 @@
         </header>
 
         <!-- Premium Navigation Tabs -->
-        <nav class="premium-tabs">
-            <button class="tab-btn active" data-tab="blocking">
+        <nav class="premium-tabs" role="tablist" aria-label="Main Tabs">
+            <button class="tab-btn active" data-tab="blocking" role="tab" aria-selected="true" aria-controls="blocking" id="tab-blocking" tabindex="0">
                 <span class="tab-icon">🚫</span>
                 <span class="tab-text">Blocking</span>
             </button>
-            <button class="tab-btn" data-tab="unlock">
+            <button class="tab-btn" data-tab="unlock" role="tab" aria-selected="false" aria-controls="unlock" id="tab-unlock" tabindex="-1">
                 <span class="tab-icon">🔓</span>
                 <span class="tab-text">Unlock</span>
             </button>
-            <button class="tab-btn" data-tab="whitelist">
+            <button class="tab-btn" data-tab="whitelist" role="tab" aria-selected="false" aria-controls="whitelist" id="tab-whitelist" tabindex="-1">
                 <span class="tab-icon">✅</span>
                 <span class="tab-text">Whitelist</span>
             </button>
-            <button class="tab-btn" data-tab="categories">
+            <button class="tab-btn" data-tab="categories" role="tab" aria-selected="false" aria-controls="categories" id="tab-categories" tabindex="-1">
                 <span class="tab-icon">🏷️</span>
                 <span class="tab-text">Categories</span>
             </button>
-            <button class="tab-btn" data-tab="dashboard">
+            <button class="tab-btn" data-tab="dashboard" role="tab" aria-selected="false" aria-controls="dashboard" id="tab-dashboard" tabindex="-1">
                 <span class="tab-icon">📈</span>
                 <span class="tab-text">Dashboard</span>
             </button>
-            <button class="tab-btn" data-tab="settings">
+            <button class="tab-btn" data-tab="settings" role="tab" aria-selected="false" aria-controls="settings" id="tab-settings" tabindex="-1">
                 <span class="tab-icon">⚙️</span>
                 <span class="tab-text">Settings</span>
             </button>
         </nav>
 
         <!-- Blocking Tab -->
-        <div class="tab-content active" id="blocking">
+        <div class="tab-content active" id="blocking" role="tabpanel" aria-labelledby="tab-blocking" aria-label="Blocking Tab">
             <div class="content-header">
                 <h2>🚫 Site Blocking</h2>
                 <p>Add websites to your block list to stay focused and productive</p>
@@ -636,7 +636,7 @@
         </div>
 
         <!-- Temporary Unlock Tab -->
-        <div class="tab-content" id="unlock">
+        <div class="tab-content" id="unlock" role="tabpanel" aria-labelledby="tab-unlock" aria-label="Unlock Tab">
             <div class="content-header">
                 <h2>🔓 Temporary Unlock</h2>
                 <p>Grant temporary access to blocked sites for specific durations</p>
@@ -755,7 +755,7 @@
         </div>
 
         <!-- Whitelist Tab -->
-        <div class="tab-content" id="whitelist">
+        <div class="tab-content" id="whitelist" role="tabpanel" aria-labelledby="tab-whitelist" aria-label="Whitelist Tab">
             <div class="content-header">
                 <h2>✅ Whitelist Management</h2>
                 <p>Add trusted sites that should never be blocked</p>
@@ -803,7 +803,7 @@
         </div>
 
         <!-- Categories Tab -->
-        <div class="tab-content" id="categories">
+        <div class="tab-content" id="categories" role="tabpanel" aria-labelledby="tab-categories" aria-label="Categories Tab">
             <div class="content-header">
                 <h2>🏷️ Category Management</h2>
                 <p>Organize your blocked sites into custom categories</p>
@@ -835,7 +835,7 @@
         </div>
 
         <!-- Dashboard Tab -->
-        <div class="tab-content" id="dashboard">
+        <div class="tab-content" id="dashboard" role="tabpanel" aria-labelledby="tab-dashboard" aria-label="Dashboard Tab">
             <div class="content-header">
                 <h2>📈 Productivity Dashboard</h2>
                 <p>Track your focus progress and productivity metrics</p>
@@ -902,7 +902,7 @@
         </div>
 
         <!-- Settings Tab -->
-        <div class="tab-content" id="settings">
+        <div class="tab-content" id="settings" role="tabpanel" aria-labelledby="tab-settings" aria-label="Settings Tab">
             <div class="content-header">
                 <h2>⚙️ Settings & Preferences</h2>
                 <p>Customize your extension experience</p>

@@ -74,20 +74,42 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     
     // Tab Management
+    // Accessibility: Keyboard navigation for tabs
+    tabBtns.forEach((btn, idx) => {
+        btn.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+                e.preventDefault();
+                const nextIdx = (idx + 1) % tabBtns.length;
+                tabBtns[nextIdx].focus();
+            } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                e.preventDefault();
+                const prevIdx = (idx - 1 + tabBtns.length) % tabBtns.length;
+                tabBtns[prevIdx].focus();
+            } else if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                btn.click();
+            }
+        });
+    });
+
     tabBtns.forEach(btn => {
         btn.addEventListener('click', () => {
             const tabName = btn.dataset.tab;
             switchTab(tabName);
         });
     });
-    
+
     function switchTab(tabName) {
-        tabBtns.forEach(btn => btn.classList.remove('active'));
+        tabBtns.forEach(btn => {
+            const isActive = btn.dataset.tab === tabName;
+            btn.classList.toggle('active', isActive);
+            btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
+            btn.setAttribute('tabindex', isActive ? '0' : '-1');
+            if (isActive) btn.focus();
+        });
         tabContents.forEach(content => content.classList.remove('active'));
-        
         document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
         document.getElementById(tabName).classList.add('active');
-        
         // Load tab-specific data
         if (tabName === 'dashboard') {
             loadDashboardData();
