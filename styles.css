@@ -1330,31 +1330,100 @@ body, .container {
     flex-shrink: 0;
 }
 
-/* Responsive Design */
-@media (max-width: 500px) {
-    body {
-        width: 100%;
-    }
-    
-    .form-row {
-        grid-template-columns: 1fr;
-    }
-    
-    .unlock-sections {
-        grid-template-columns: 1fr;
-    }
-    
-    .dashboard-stats {
-        grid-template-columns: 1fr;
-    }
-    
-    .timer-controls {
-        flex-direction: column;
-    }
-    
-    .settings-actions {
-        flex-direction: column;
-    }
+/* Responsive Design: Mobile (≤400px) */
+@media (max-width: 400px) {
+  /* Responsive rules for inner content only */
+  .tab-content, .settings-section, .dashboard-stats, .stat-card, .focus-timer, .recent-activity, .category-list, .category-item, .site-item, .unlock-item {
+    padding: 8px !important;
+    border-radius: 10px !important;
+    font-size: 14px !important;
+  }
+  .btn-primary, .btn-secondary {
+    font-size: 13px !important;
+    padding: 10px 8px !important;
+  }
+  .premium-header, .premium-tabs {
+    padding: 10px 8px !important;
+  }
+  .input-wrapper, .premium-select, .premium-input {
+    padding: 8px !important;
+    font-size: 13px !important;
+  }
+  .form-row, .unlock-sections, .dashboard-stats {
+    grid-template-columns: 1fr !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
+  .timer-controls, .settings-actions {
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
+}
+
+/* Responsive Design: Small Tablets (401px–600px) */
+@media (min-width: 401px) and (max-width: 600px) {
+  /* Responsive rules for inner content only */
+  .tab-content, .settings-section, .dashboard-stats, .stat-card, .focus-timer, .recent-activity, .category-list, .category-item, .site-item, .unlock-item {
+    padding: 12px !important;
+    border-radius: 14px !important;
+    font-size: 15px !important;
+  }
+  .btn-primary, .btn-secondary {
+    font-size: 14px !important;
+    padding: 12px 10px !important;
+  }
+  .premium-header, .premium-tabs {
+    padding: 14px 10px !important;
+  }
+  .input-wrapper, .premium-select, .premium-input {
+    padding: 10px !important;
+    font-size: 14px !important;
+  }
+  .form-row, .unlock-sections, .dashboard-stats {
+    grid-template-columns: 1fr !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+  .timer-controls, .settings-actions {
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+}
+
+/* Responsive Design: Desktop Popups (≥601px) */
+@media (min-width: 601px) {
+  .container {
+    min-width: 500px;
+    min-height: 650px;
+    width: 500px;
+    height: 650px;
+    padding: 0;
+  }
+  .tab-content, .settings-section, .dashboard-stats, .stat-card, .focus-timer, .recent-activity, .category-list, .category-item, .site-item, .unlock-item {
+    padding: 18px !important;
+    border-radius: 18px !important;
+    font-size: 16px !important;
+  }
+  .btn-primary, .btn-secondary {
+    font-size: 15px !important;
+    padding: 14px 18px !important;
+  }
+  .premium-header, .premium-tabs {
+    padding: 20px 24px !important;
+  }
+  .input-wrapper, .premium-select, .premium-input {
+    padding: 14px !important;
+    font-size: 15px !important;
+  }
+  .form-row, .unlock-sections, .dashboard-stats {
+    grid-template-columns: 1fr 1fr !important;
+    flex-direction: row !important;
+    gap: 16px !important;
+  }
+  .timer-controls, .settings-actions {
+    flex-direction: row !important;
+    gap: 8px !important;
+  }
 }
 
 /* Password Protection Styles */
