@@ -172,6 +172,9 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Start active unlocks timer
         startActiveUnlocksTimer();
+        
+        // Add status indicator click handler
+        setupStatusIndicatorClick();
     }
     
     // Event Listeners
@@ -256,6 +259,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     console.log('Storage updated, syncing DNR rules...');
                     syncDNRRules(sites);
                     loadSites();
+                    updateStatusIndicator(); // Update status immediately
                     addActivity(`Added ${domain} to block list`);
                     showNotification('Site added to block list!', 'success');
                 });
@@ -280,6 +284,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }, () => {
                 syncDNRRules(sites);
                 loadSites();
+                updateStatusIndicator(); // Update status immediately
                 addActivity(`Removed ${domain} from block list`);
                 showNotification('Site removed from block list!', 'success');
             });
@@ -557,6 +562,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
                 
                 updateActiveUnlocks();
+                updateStatusIndicator(); // Update status immediately
             });
         });
     }
@@ -585,6 +591,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     chrome.storage.local.get(['blockedSites'], (blockResult) => {
                         syncDNRRules(blockResult.blockedSites || []);
                     });
+                    
+                    // Update status indicator when unlocks expire
+                    updateStatusIndicator();
                 });
             }
             
@@ -626,7 +635,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    // Start timer to update active unlocks display
+    // Start timer to update active unlocks display and status
     function startActiveUnlocksTimer() {
         // Clear existing timer
         if (activeUnlocksUpdateTimer) {
@@ -636,10 +645,12 @@ document.addEventListener('DOMContentLoaded', () => {
         // Update every minute
         activeUnlocksUpdateTimer = setInterval(() => {
             updateActiveUnlocks();
+            updateStatusIndicator(); // Update status every minute
         }, 60000); // Update every minute
         
         // Also update immediately
         updateActiveUnlocks();
+        updateStatusIndicator();
     }
     
     function loadUnlockData() {
@@ -1044,21 +1055,125 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    // Status Indicator
+    // Enhanced Status Indicator
     function updateStatusIndicator() {
-        chrome.storage.local.get(['blockedSites'], (result) => {
-            const hasBlockedSites = (result.blockedSites || []).length > 0;
+        chrome.storage.local.get(['blockedSites', 'temporaryUnlocks', 'blockStats'], (result) => {
+            const blockedSites = result.blockedSites || [];
+            const temporaryUnlocks = result.temporaryUnlocks || [];
+            const blockStats = result.blockStats || {};
             
             const statusDot = document.querySelector('.status-dot');
             const statusText = document.querySelector('.status-text');
             
-            if (hasBlockedSites) {
-                statusDot.style.background = '#4CAF50';
-                statusText.textContent = 'Active';
+            // Get active unlocks (not expired)
+            const activeUnlocks = temporaryUnlocks.filter(unlock => Date.now() < unlock.endTime);
+            
+            // Get today's block count
+            const today = new Date().toDateString();
+            const todayBlocks = blockStats[today] || 0;
+            
+            // Determine status based on conditions
+            let status = {
+                color: '#ff9800', // Default orange
+                text: 'Inactive',
+                details: ''
+            };
+            
+            if (blockedSites.length === 0) {
+                status = {
+                    color: '#ff9800',
+                    text: 'Inactive',
+                    details: 'No sites blocked'
+                };
+            } else if (activeUnlocks.length > 0) {
+                status = {
+                    color: '#ffc107',
+                    text: 'Warning',
+                    details: `${activeUnlocks.length} unlock${activeUnlocks.length > 1 ? 's' : ''} active`
+                };
             } else {
-                statusDot.style.background = '#ff9800';
-                statusText.textContent = 'Inactive';
+                status = {
+                    color: '#4CAF50',
+                    text: 'Active',
+                    details: `${blockedSites.length} site${blockedSites.length > 1 ? 's' : ''} blocked`
+                };
             }
+            
+            // Add today's blocks info if any
+            if (todayBlocks > 0) {
+                status.details += ` • ${todayBlocks} blocked today`;
+            }
+            
+            // Update the UI
+            statusDot.style.background = status.color;
+            statusText.textContent = status.text;
+            
+            // Add tooltip with detailed information
+            const statusIndicator = document.querySelector('.status-indicator');
+            statusIndicator.title = status.details;
+            
+            // Add pulsing animation for warning status
+            if (status.text === 'Warning') {
+                statusDot.classList.add('pulse-warning');
+            } else {
+                statusDot.classList.remove('pulse-warning');
+            }
+            
+            // Add glow effect for active status
+            if (status.text === 'Active') {
+                statusDot.classList.add('glow-active');
+            } else {
+                statusDot.classList.remove('glow-active');
+            }
+        });
+    }
+    
+    // Status Indicator Click Handler
+    function setupStatusIndicatorClick() {
+        const statusIndicator = document.querySelector('.status-indicator');
+        statusIndicator.addEventListener('click', () => {
+            showDetailedStatus();
+        });
+        
+        // Add cursor pointer to indicate it's clickable
+        statusIndicator.style.cursor = 'pointer';
+    }
+    
+    // Show detailed status information
+    function showDetailedStatus() {
+        chrome.storage.local.get(['blockedSites', 'temporaryUnlocks', 'blockStats', 'whitelistSites'], (result) => {
+            const blockedSites = result.blockedSites || [];
+            const temporaryUnlocks = result.temporaryUnlocks || [];
+            const blockStats = result.blockStats || {};
+            const whitelistSites = result.whitelistSites || [];
+            
+            // Get active unlocks
+            const activeUnlocks = temporaryUnlocks.filter(unlock => Date.now() < unlock.endTime);
+            
+            // Get today's stats
+            const today = new Date().toDateString();
+            const todayBlocks = blockStats[today] || 0;
+            
+            // Calculate total blocks this week
+            const weekAgo = new Date();
+            weekAgo.setDate(weekAgo.getDate() - 7);
+            let weeklyBlocks = 0;
+            Object.keys(blockStats).forEach(date => {
+                const blockDate = new Date(date);
+                if (blockDate >= weekAgo) {
+                    weeklyBlocks += blockStats[date] || 0;
+                }
+            });
+            
+            const details = `
+🚫 Blocked Sites: ${blockedSites.length}
+✅ Whitelisted Sites: ${whitelistSites.length}
+🔓 Active Unlocks: ${activeUnlocks.length}
+📊 Today's Blocks: ${todayBlocks}
+📈 Weekly Blocks: ${weeklyBlocks}
+            `.trim();
+            
+            showNotification(details, 'info');
         });
     }
     
