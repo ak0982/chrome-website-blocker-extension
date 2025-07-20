@@ -1,258 +1,372 @@
-# Chrome Website Blocker Extension
+# Website Blocker Pro – Documentation
 
-A powerful Chrome extension that allows users to block access to specific websites. Built with Manifest V3, this extension provides a user-friendly interface to manage blocked sites and ensures websites remain blocked even after page refreshes and direct navigation.
+## Table of Contents
 
-## 🚀 Features
-
-- **Easy Website Blocking**: Add websites to your block list with a simple interface
-- **Persistent Blocking**: Websites remain blocked even after page refresh or direct navigation
-- **Real-time Updates**: Changes to blocked sites take effect immediately
-- **User-friendly Interface**: Clean, intuitive popup interface
-- **Cross-platform**: Works on all platforms where Chrome is available
-- **Privacy-focused**: All data is stored locally in your browser
-
-## 📋 Table of Contents
-
-- [Installation](#installation)
-- [Usage](#usage)
-- [Architecture](#architecture)
-- [Code Structure](#code-structure)
-- [Technical Flow](#technical-flow)
-- [API Reference](#api-reference)
-- [Troubleshooting](#troubleshooting)
-- [Contributing](#contributing)
-- [License](#license)
-
-## 🔧 Installation
-
-### Method 1: Load Unpacked (Development)
-1. Download or clone this repository
-2. Open Chrome and navigate to `chrome://extensions/`
-3. Enable **Developer mode** (toggle in top right)
-4. Click **Load unpacked**
-5. Select the `website-blocker-extension` folder
-6. The extension icon should appear in your Chrome toolbar
-
-### Method 2: Chrome Web Store (Future)
-*This extension will be available on the Chrome Web Store soon*
-
-## 📖 Usage
-
-### Adding a Website to Block
-1. Click the extension icon in your Chrome toolbar
-2. Enter the domain name (e.g., `facebook.com`, `youtube.com`)
-3. Click **Add** or press Enter
-4. The website will be immediately blocked
-
-### Removing a Website from Block List
-1. Click the extension icon
-2. Find the website in the blocked list
-3. Click **Remove** next to the website
-4. The website will be immediately unblocked
-
-### What Happens When a Site is Blocked
-- Direct navigation to the blocked site will redirect to a block page
-- Page refreshes on blocked sites will redirect to the block page
-- The site will be completely inaccessible until removed from the block list
-
-## 🏗️ Architecture
-
-### Manifest V3 Compliance
-This extension is built using Chrome's Manifest V3, which provides:
-- Better security through service workers
-- Improved performance
-- Enhanced privacy protection
-- Modern Chrome extension standards
-
-### Core Components
-
-```
-website-blocker-extension/
-├── manifest.json          # Extension configuration
-├── background.js          # Service worker (background script)
-├── popup.html            # Extension popup interface
-├── popup.js              # Popup logic and UI interactions
-├── blocked.html          # Blocked page template
-├── styles.css            # Styling for popup and blocked page
-├── icon*.png             # Extension icons (16, 32, 48, 128px)
-└── README.md             # This file
-```
-
-## 📁 Code Structure
-
-### 1. manifest.json
-The extension's configuration file that defines:
-- **Permissions**: Required Chrome APIs
-  - `storage`: For saving blocked sites locally
-  - `declarativeNetRequest`: For blocking network requests
-  - `declarativeNetRequestWithHostAccess`: For host-specific blocking
-  - `webNavigation`: For intercepting navigation events
-- **Host Permissions**: `<all_urls>` to access all websites
-- **Background Script**: Service worker for persistent functionality
-- **Action**: Popup interface configuration
-
-### 2. background.js (Service Worker)
-The core blocking logic that runs in the background:
-
-#### Key Functions:
-- **`syncDNRRules()`**: Synchronizes declarativeNetRequest rules with stored blocked sites
-- **Event Listeners**:
-  - `chrome.runtime.onStartup`: Initialize rules when browser starts
-  - `chrome.runtime.onInstalled`: Initialize rules when extension is installed
-  - `chrome.storage.onChanged`: Update rules when storage changes
-  - `chrome.tabs.onUpdated`: Handle page refreshes and navigation
-  - `chrome.webNavigation.onBeforeNavigate`: Intercept navigation attempts
-
-#### DeclarativeNetRequest Rules:
-```javascript
-{
-  id: idx + 1,
-  priority: 1,
-  action: { type: 'block' },
-  condition: {
-    urlFilter: `||${domain}^`,
-    resourceTypes: ["main_frame"]
-  }
-}
-```
-
-### 3. popup.js (Popup Interface)
-Handles the user interface and interactions:
-
-#### Key Functions:
-- **`normalizeDomain()`**: Cleans and validates domain input
-- **`renderList()`**: Displays the current blocked sites list
-- **`addSite()`**: Adds a new site to the block list
-- **`removeSite()`**: Removes a site from the block list
-- **`syncDNRRules()`**: Updates declarativeNetRequest rules
-
-#### Domain Normalization:
-- Removes protocols (http://, https://)
-- Removes www. prefix
-- Converts to lowercase
-- Removes paths, queries, and fragments
-
-### 4. popup.html & styles.css
-- Clean, responsive user interface
-- Modern styling with hover effects
-- Mobile-friendly design
-
-### 5. blocked.html
-- Custom block page shown when accessing blocked sites
-- Informs users that the site is blocked
-- Provides instructions on how to unblock
-
-## �� Technical Flow
-
-### 1. Extension Initialization
-```
-Extension Loads → background.js starts → syncDNRRules() → Load blocked sites from storage → Create DNR rules
-```
-
-### 2. Adding a Website
-```
-User enters domain → normalizeDomain() → Validate input → Save to chrome.storage → syncDNRRules() → Update DNR rules → Website blocked
-```
-
-### 3. Blocking a Website Access
-```
-User navigates to blocked site → chrome.webNavigation.onBeforeNavigate → Check if domain in blocked list → Redirect to blocked.html
-```
-
-### 4. Page Refresh Handling
-```
-User refreshes blocked page → chrome.tabs.onUpdated → Check if domain in blocked list → Redirect to blocked.html
-```
-
-### 5. Removing a Website
-```
-User clicks Remove → Remove from chrome.storage → syncDNRRules() → Update DNR rules → Website unblocked
-```
-
-## 🔌 API Reference
-
-### Chrome APIs Used
-
-#### chrome.storage.local
-- **Purpose**: Persistent local storage for blocked sites
-- **Methods Used**:
-  - `get()`: Retrieve blocked sites list
-  - `set()`: Save blocked sites list
-  - `onChanged`: Listen for storage changes
-
-#### chrome.declarativeNetRequest
-- **Purpose**: Block network requests at the browser level
-- **Methods Used**:
-  - `updateDynamicRules()`: Add/remove blocking rules
-  - `getDynamicRules()`: Retrieve current rules
-
-#### chrome.webNavigation
-- **Purpose**: Intercept and control navigation events
-- **Events Used**:
-  - `onBeforeNavigate`: Intercept navigation attempts
-
-#### chrome.tabs
-- **Purpose**: Control browser tabs
-- **Methods Used**:
-  - `update()`: Redirect tabs to blocked page
-- **Events Used**:
-  - `onUpdated`: Detect page load completion
-
-## 🛠️ Troubleshooting
-
-### Common Issues
-
-#### Extension Not Blocking Sites
-1. Check if the extension is enabled in `chrome://extensions/`
-2. Verify the domain format (should be like `facebook.com`, not `https://facebook.com`)
-3. Check browser console for errors
-4. Try refreshing the extension
-
-#### Sites Still Accessible After Adding
-1. Ensure the domain is correctly formatted
-2. Check if the site is in the blocked list
-3. Try navigating directly to the site (not from bookmarks)
-4. Clear browser cache and try again
-
-#### Extension Not Loading
-1. Verify all files are present in the extension directory
-2. Check manifest.json for syntax errors
-3. Ensure Chrome is updated to a recent version
-4. Try reloading the extension
-
-### Debug Mode
-The extension includes debug information in the popup. Click the extension icon to see:
-- Current declarativeNetRequest rules
-- Storage status
-- Error messages
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-### Development Setup
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
-
-### Code Style
-- Use consistent indentation (2 spaces)
-- Follow JavaScript ES6+ standards
-- Add comments for complex logic
-- Test on multiple Chrome versions
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- Built with Chrome Extension Manifest V3
-- Uses Chrome's declarativeNetRequest API for efficient blocking
-- Inspired by the need for simple, effective website blocking
+- [Project Overview](#project-overview)
+- [System & Software Architecture](#system--software-architecture)
+- [Codebase Structure](#codebase-structure)
+- [Setup, Deployment, and Configuration](#setup-deployment-and-configuration)
+- [Component & File Documentation](#component--file-documentation)
+- [API & Integration Documentation](#api--integration-documentation)
+- [Testing & Quality Assurance](#testing--quality-assurance)
+- [Extensibility & Customization](#extensibility--customization)
+- [Troubleshooting & FAQs](#troubleshooting--faqs)
+- [Contribution Guidelines](#contribution-guidelines)
 
 ---
 
-**Note**: This extension is for personal use and productivity enhancement. Please respect website terms of service and use responsibly.
+## Project Overview
+
+**Website Blocker Pro** is a Chrome extension that empowers users to block distracting or unwanted websites, manage whitelists, organize sites by category, and boost productivity with features like a focus timer and activity dashboard. The extension is built with Manifest V3, prioritizing security, privacy, and performance. All user data is stored locally.
+
+**Key Features:**
+- Block/Unblock websites instantly
+- Persistent blocking (even after refresh or direct navigation)
+- Whitelist management
+- Category organization
+- Focus timer and productivity dashboard
+- Custom block page
+- Responsive, accessible UI with dark mode and accent color
+- Local storage (no cloud sync by default)
+- CSV import/export for migration/backup
+
+---
+
+## System & Software Architecture
+
+### Detailed Architecture Diagram
+
+```mermaid
+flowchart TD
+    User["User"] -- "Interacts" --> Popup["Popup UI\n(popup.html, popup.js)"]
+    Popup -- "Reads/Writes" --> Storage["chrome.storage.local"]
+    Popup -- "Sends messages" --> Background["background.js\n(Service Worker)"]
+    Background -- "Updates" --> DNR["Declarative Net Request API"]
+    Background -- "Redirects" --> Tabs["chrome.tabs"]
+    Background -- "Intercepts" --> WebNav["chrome.webNavigation"]
+    Background -- "Context Menus" --> Menus["chrome.contextMenus"]
+    ContentScript["content-script.js"] -- "Injects/Reads" --> Webpages["Webpages"]
+    Storage -- "Persists" --> Data[("Blocked/Whitelisted Sites, Settings")]
+    User -- "Navigates" --> BlockedPage["blocked.html"]
+    Popup -- "Loads" --> Styles["styles.css"]
+    BlockedPage -- "Loads" --> Styles
+    Popup -- "Loads" --> Icons["icon*.png"]
+    BlockedPage -- "Loads" --> Icons
+```
+
+### Simple Overview Diagram
+
+```mermaid
+flowchart LR
+    User["User"] --> Popup["Popup UI"]
+    Popup --> Background["Background Script"]
+    Background --> DNR["DNR API"]
+    Background --> Tabs["Tabs"]
+    Popup --> Storage["Storage"]
+    User --> BlockedPage["Blocked Page"]
+```
+
+### Technologies Used
+
+- **Chrome Extensions API (Manifest V3)**
+- **JavaScript (ES6+)**
+- **HTML5/CSS3** (responsive, accessible, themable)
+- **Chrome Storage API** (local)
+- **Declarative Net Request API** (for blocking)
+- **Web Navigation, Tabs, Context Menus APIs**
+- **Service Worker** (background.js)
+
+### Design Patterns
+
+- **Modularization:** Each feature is encapsulated in its own function/module.
+- **Event-driven:** Listeners for UI, storage, and browser events.
+- **Separation of Concerns:** UI logic (popup.js), background logic (background.js), content script (content-script.js), and configuration (manifest.json) are separated.
+
+---
+
+## Codebase Structure
+
+```
+website-blocker-extension/
+├── manifest.json          # Extension configuration and permissions
+├── background.js          # Service worker: blocking logic, DNR rules, context menus
+├── popup.html             # Popup UI markup
+├── popup.js               # Popup UI logic, storage, settings, dashboard
+├── styles.css             # Shared styles for popup and block page
+├── blocked.html           # Custom block page shown to user
+├── blocked.js             # Logic for block page (if any)
+├── content-script.js      # Injected into web pages (if needed)
+├── icon*.png              # Extension icons (various sizes)
+├── README.md              # Project documentation
+└── .gitignore, etc.       # Project config files
+```
+
+---
+
+## Setup, Deployment, and Configuration
+
+### Prerequisites
+
+- Google Chrome (latest version recommended)
+- Node.js & npm (for development, optional)
+- Git (for version control)
+
+### Installation (Development)
+
+1. Clone the repository:
+   ```sh
+   git clone https://github.com/yourusername/website-blocker-extension.git
+   ```
+2. Open Chrome and go to `chrome://extensions/`
+3. Enable **Developer mode**
+4. Click **Load unpacked** and select the `website-blocker-extension` folder
+
+### Deployment
+
+- **Manual:** Zip the extension folder and upload to the Chrome Web Store (follow [official guide](https://developer.chrome.com/docs/webstore/publish/)).
+- **CI/CD:** (If configured) Use GitHub Actions or similar to lint, test, and package the extension for release.
+
+### Configuration
+
+- All settings are managed via the popup UI and stored in `chrome.storage.local`.
+- No environment variables required for local use.
+
+---
+
+## Component & File Documentation
+
+### manifest.json
+
+> **Summary:**  
+> Declares extension metadata, permissions, background scripts, content scripts, icons, and web-accessible resources.
+
+- **Permissions:**  
+  - `storage`, `declarativeNetRequest`, `webNavigation`, `notifications`, `contextMenus`, `commands`
+- **Host Permissions:**  
+  - `<all_urls>` (to block any site)
+- **Background:**  
+  - `background.js` as service worker
+- **Content Scripts:**  
+  - `content-script.js` (optional, for page-level features)
+- **Action:**  
+  - `popup.html` as the default popup
+
+### background.js
+
+> **Summary:**  
+> Service worker that manages blocking logic, DNR rules, context menu actions, and responds to storage and navigation events.
+
+**Key Functions:**
+- `syncDNRRules()`: Syncs the block list with Chrome's DNR API.
+- Event listeners for:
+  - `chrome.runtime.onStartup` / `onInstalled`: Initialize rules.
+  - `chrome.storage.onChanged`: Update rules on blocklist change.
+  - `chrome.webNavigation.onBeforeNavigate`: Redirect to block page.
+  - `chrome.contextMenus`: Add/remove context menu items.
+
+**Error Handling:**  
+- Handles duplicate context menu IDs gracefully.
+- Logs errors to the console and (optionally) to the popup debug panel.
+
+**Edge Cases:**  
+- Ensures no duplicate DNR rules.
+- Handles race conditions on storage updates.
+
+### popup.html
+
+> **Summary:**  
+> The main user interface for managing blocked/whitelisted sites, settings, and viewing stats.
+
+- **ARIA roles and labels** for accessibility.
+- **Responsive design** for mobile/desktop.
+- **Dark mode** and **accent color** support.
+- **Tab-based navigation** for features (Blocking, Whitelist, Categories, Dashboard, Settings).
+
+### popup.js
+
+> **Summary:**  
+> Handles all popup UI logic, including site management, settings, dashboard, notifications, and accessibility.
+
+**Key Functions:**
+- `addSite()`, `removeSite()`: Manage block list.
+- `addWhitelistSite()`, `removeWhitelistSite()`: Manage whitelist.
+- `loadSites()`, `loadWhitelist()`, `loadCategories()`: Render UI from storage.
+- `syncDNRRules()`: Request background to update DNR rules.
+- `showNotification()`: User feedback.
+- `initializeDarkMode()`, `initializeAccentColor()`: Theming.
+- `addActivity()`: Log user actions for dashboard.
+- **Keyboard navigation** and ARIA for accessibility.
+
+**Error Handling:**  
+- Validates domain input.
+- Handles storage errors and notifies user.
+
+**Edge Cases:**  
+- Prevents duplicate entries.
+- Handles empty/invalid input gracefully.
+
+**Inline Comments:**  
+- Complex logic and event handlers are commented for clarity.
+
+### styles.css
+
+> **Summary:**  
+> Provides all styling for popup and block page, including responsive layouts, dark mode, accent color, and animations.
+
+- Uses CSS variables for theming.
+- Media queries for responsiveness.
+- Animations for tab transitions and notifications.
+- High-contrast and accessible color choices.
+
+### blocked.html & blocked.js
+
+> **Summary:**  
+> Custom page shown when a user tries to access a blocked site.
+
+- Explains why the site is blocked.
+- Optionally provides a way to request unblock (if enabled).
+
+### content-script.js
+
+> **Summary:**  
+> (Optional) Injected into web pages for advanced features (e.g., hiding page content before redirect).
+
+---
+
+## API & Integration Documentation
+
+### Chrome APIs Used
+
+| API                        | Purpose                                 | Key Methods/Events Used                |
+|----------------------------|-----------------------------------------|----------------------------------------|
+| `chrome.storage.local`     | Store block/whitelist/settings          | `get`, `set`, `onChanged`              |
+| `chrome.declarativeNetRequest` | Block network requests             | `updateDynamicRules`, `getDynamicRules` |
+| `chrome.webNavigation`     | Intercept navigation                    | `onBeforeNavigate`                     |
+| `chrome.tabs`              | Redirect tabs, update UI                | `update`, `onUpdated`                  |
+| `chrome.contextMenus`      | Add right-click menu for quick block    | `create`, `removeAll`                  |
+| `chrome.notifications`     | User notifications                      | `create`                               |
+| `chrome.commands`          | Keyboard shortcuts                      | `_execute_action`, `quick-add-site`    |
+
+### Integration Points
+
+- **No third-party services** by default (privacy-focused).
+- **CSV Import/Export:** For migration and backup (UI-driven, not API).
+
+---
+
+## Testing & Quality Assurance
+
+### Testing Strategies
+
+- **Manual Testing:**  
+  - Add/remove sites, test block/unblock, whitelist, settings, and dashboard.
+  - Test on multiple Chrome versions and OSes.
+- **Automated Testing:**  
+  - (If present) Use Jest or Mocha for unit tests on logic modules.
+- **Linting:**  
+  - Use ESLint for code quality.
+
+### Running Tests
+
+- Manual:  
+  - Load extension in Chrome, use all features, check for errors in popup and background.
+- Automated:  
+  - Run `npm test` (if test suite exists).
+
+### Coverage Expectations
+
+- All core logic (blocking, storage, UI) should be covered.
+- Edge cases (invalid input, duplicate domains, race conditions) should be tested.
+
+---
+
+## Extensibility & Customization
+
+### Adding New Features
+
+- **New UI Features:**  
+  - Add new tab/section in `popup.html` and corresponding logic in `popup.js`.
+- **New Blocking Logic:**  
+  - Update `background.js` and DNR rule generation.
+- **Settings:**  
+  - Add new fields to settings section in popup and handle in storage.
+
+### Conventions
+
+- Use ES6+ syntax.
+- Add docstrings and inline comments for all new functions/modules.
+- Follow existing file/module structure.
+- Test thoroughly before submitting PRs.
+
+---
+
+## Troubleshooting & FAQs
+
+### Common Issues & Solutions
+
+| Problem                                 | Solution                                                                 |
+|------------------------------------------|--------------------------------------------------------------------------|
+| Extension not blocking sites             | Check if enabled, verify domain format, reload extension, check console  |
+| Sites still accessible after blocking    | Ensure correct domain, try direct navigation, clear cache                |
+| Extension not loading                    | Check for missing files, manifest errors, Chrome version                 |
+| Debug info needed                        | Use popup debug panel for rules/status                                   |
+
+### FAQs
+
+**Q: Can I block subdomains?**  
+A: Yes, blocking `facebook.com` will also block `www.facebook.com` and other subdomains.
+
+**Q: Where is my data stored?**  
+A: All data is stored locally in your browser via `chrome.storage.local`.
+
+**Q: How do I migrate my block list?**  
+A: Use the CSV export/import feature in the popup.
+
+---
+
+## Contribution Guidelines
+
+### How to Contribute
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes (with docstrings and comments)
+4. Test thoroughly
+5. Submit a pull request
+
+### Coding Standards
+
+- Use 2-space indentation
+- ES6+ JavaScript
+- Add docstrings and inline comments for all new code
+- Test on multiple platforms
+
+### Review Process
+
+- All PRs are reviewed for code quality, documentation, and test coverage.
+- Automated checks (linting/tests) must pass before merge.
+
+---
+
+# Example Docstring and Inline Comment Style
+
+```js
+/**
+ * Adds a domain to the block list and updates DNR rules.
+ * @param {string} domain - The domain to block (must be normalized).
+ * @param {string} category - Optional category for the domain.
+ * @returns {Promise<void>}
+ * @throws {Error} If storage update fails.
+ * @example
+ *   addSite('facebook.com', 'social');
+ */
+function addSite(domain, category = 'other') {
+  // Validate input
+  if (!domain) throw new Error('Domain is required');
+  // ...rest of logic
+}
+```
+
+---
+
+This documentation is designed to be a living document. Please update it as the codebase evolves! If you need file-by-file docstring templates or more detailed diagrams, let me know.
